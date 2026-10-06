@@ -10,7 +10,7 @@
 <style>
 :root{
   --bg:#F6F4F3; --surface:#FFFFFF; --ink:#2A1C1F; --muted:#6B5F61; --line:#E0D8D8;
-  --brand:#740C1F; --brand-ink:#FFFFFF; --brand-soft:#F4E7E9; --stage:#E9E6E4;
+  --brand:#740C1F; --brand-deep:#5A0817; --gold:#D8C3A0; --brand-ink:#FFFFFF; --brand-soft:#F4E7E9; --stage:#E9E6E4;
   --danger:#B23A1E; --focus:#B89568;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -19,13 +19,13 @@
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#151012; --surface:#1E181A; --ink:#EEE6E7; --muted:#A99D9F; --line:#3A2F32;
-    --brand:#D27A8A; --brand-ink:#2A060D; --brand-soft:#2E1A1E; --stage:#0E0B0C;
+    --brand:#D27A8A; --brand-deep:#BC6676; --gold:#5A0817; --brand-ink:#2A060D; --brand-soft:#2E1A1E; --stage:#0E0B0C;
     --danger:#E58372; --focus:#D2B489;
   }
 }
 :root[data-theme="dark"]{
   --bg:#151012; --surface:#1E181A; --ink:#EEE6E7; --muted:#A99D9F; --line:#3A2F32;
-  --brand:#D27A8A; --brand-ink:#2A060D; --brand-soft:#2E1A1E; --stage:#0E0B0C;
+  --brand:#D27A8A; --brand-deep:#BC6676; --gold:#5A0817; --brand-ink:#2A060D; --brand-soft:#2E1A1E; --stage:#0E0B0C;
   --danger:#E58372; --focus:#D2B489;
 }
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -53,18 +53,27 @@ body{
 @media (max-width:560px){ .brand{gap:14px} .logo-tile{width:70px; height:82px; border-radius:14px; padding:7px} }
 
 /* Tabs */
-.tabs{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px}
-.tab{
-  display:flex; gap:14px; align-items:center; text-align:start;
-  padding:16px 18px; border:1px solid var(--line); border-radius:14px;
-  background:var(--surface); color:var(--ink); cursor:pointer; font:inherit;
-  transition:background .15s, border-color .15s;
+.home{display:flex; flex-direction:column; gap:16px}
+body.is-home .tool-card{padding:30px 28px; gap:22px}
+body.is-home .tool-card .ic{width:52px; height:52px}
+body.is-home .tool-card strong{font-size:1.3rem}
+body.is-home .tool-card small{font-size:.98rem}
+.tool-card{
+  display:flex; gap:18px; align-items:center; text-decoration:none;
+  padding:22px 22px; border:1px solid var(--brand); border-radius:14px;
+  background:var(--brand); color:var(--brand-ink); transition:background .15s, transform .15s;
 }
-.tab svg{flex:none; width:34px; height:34px}
-.tab strong{display:block; font-size:1.05rem; font-weight:600}
-.tab small{display:block; color:var(--muted); font-size:.86rem; line-height:1.5}
-.tab[aria-selected="true"]{background:var(--brand); border-color:var(--brand); color:var(--brand-ink)}
-.tab[aria-selected="true"] small{color:inherit; opacity:.85}
+.tool-card:hover{background:var(--brand-deep)}
+.tool-card:active{transform:scale(.99)}
+.tool-card .ic{flex:none; width:44px; height:44px; color:var(--gold)}
+.tool-card .txt{flex:1}
+.tool-card strong{display:block; font-size:1.15rem; font-weight:600}
+.tool-card small{display:block; color:inherit; opacity:.82; font-size:.9rem; line-height:1.6}
+.tool-card .go{flex:none; width:22px; height:22px; color:inherit; opacity:.8}
+.view-bar{display:flex; align-items:center; gap:16px; margin-bottom:18px; flex-wrap:wrap}
+.view-bar .btn{text-decoration:none; background:var(--brand); border-color:var(--brand); color:var(--brand-ink)}
+.view-bar .btn:hover{background:var(--brand-deep)}
+.view-bar h2{font-family:"Reem Kufi","IBM Plex Sans Arabic",Tahoma,sans-serif; font-weight:500; font-size:1.35rem; margin:0; color:var(--brand)}
 
 /* Cards and forms */
 .card{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:20px}
@@ -181,6 +190,18 @@ input[type=color]{width:100%; height:44px; padding:3px; border:1px solid var(--l
 .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
 [hidden]{display:none !important}
 main.wrap{padding-bottom:40px}
+.small-drop{min-height:190px}
+.modes{border:0; padding:0; margin:18px 0}
+.modes legend{font-weight:500; font-size:.92rem; margin-bottom:8px; padding:0}
+.mode{display:flex; gap:12px; align-items:flex-start; padding:12px 14px; border:1px solid var(--line); border-radius:10px; cursor:pointer; margin-bottom:8px; font-weight:400}
+.mode input{margin-top:5px; width:18px; height:18px; accent-color:var(--brand); flex:none}
+.mode strong{display:block; font-weight:600; font-size:.95rem}
+.mode small{display:block; color:var(--muted); font-size:.85rem; line-height:1.6}
+.mode:has(input:checked){border-color:var(--brand); background:var(--brand-soft)}
+.progress{height:8px; border-radius:99px; background:var(--brand-soft); overflow:hidden; margin-top:14px}
+.progress .bar{height:100%; width:0; background:var(--brand); transition:width .25s}
+.w-preview{background:var(--stage); border-radius:10px; min-height:360px; display:grid; place-items:center; padding:16px; margin-bottom:10px}
+.w-preview canvas{max-width:100%; height:auto; background:#FFFFFF; box-shadow:0 1px 3px rgba(0,0,0,.18)}
 .row3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px}
 .row3 .btn{height:44px; padding:0 8px}
 .btn[aria-pressed="true"]{background:var(--brand-soft); border-color:var(--brand); color:var(--brand)}
@@ -205,8 +226,8 @@ main.wrap{padding-bottom:40px}
   .drop{min-height:340px}
 }
 @media (max-width:560px){
-  .tabs{grid-template-columns:1fr}
-  .tab small{display:none}
+  .tool-card{padding:18px 16px; gap:14px}
+  .tool-card .ic{width:36px; height:36px}
   .row2{grid-template-columns:1fr}
 }
 </style>
@@ -237,6 +258,7 @@ main.wrap{padding-bottom:40px}
     <symbol id="i-prev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 6l6 6-6 6"/></symbol>
     <symbol id="i-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7V4.5h14V7M12 4.5v15M9 19.5h6"/></symbol>
     <symbol id="i-move" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18M12 3l-2.5 2.5M12 3l2.5 2.5M12 21l-2.5-2.5M12 21l2.5-2.5M3 12l2.5-2.5M3 12l2.5 2.5M21 12l-2.5-2.5M21 12l-2.5 2.5"/></symbol>
+    <symbol id="i-word" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 3.5H7a1.5 1.5 0 0 0-1.5 1.5v14A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V8.5l-5-5z"/><path d="M13.5 3.5v5h5"/><path d="M8.5 11.5l1.25 5 1.75-3.75 1.75 3.75 1.25-5"/></symbol>
     <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11" height="11" rx="1.5"/><path d="M15.5 8.5V6A1.5 1.5 0 0 0 14 4.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/></symbol>
     <symbol id="i-erase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 7h15M9.5 7V5h5v2M6.5 7l1 12.5h9L17.5 7"/></symbol>
   </defs>
@@ -252,19 +274,31 @@ main.wrap{padding-bottom:40px}
 </header>
 
 <main class="wrap">
-  <div class="tabs" role="tablist" aria-label="الأدوات">
-    <button class="tab" role="tab" id="tab-qr" aria-controls="panel-qr" aria-selected="true">
-      <svg aria-hidden="true"><use href="#i-qr"/></svg>
-      <span><strong>تحويل الرابط إلى باركود</strong><small>إنشاء رمز QR قابل للمسح والتنزيل بصيغتي PNG وSVG</small></span>
-    </button>
-    <button class="tab" role="tab" id="tab-sign" aria-controls="panel-sign" aria-selected="false" tabindex="-1">
-      <svg aria-hidden="true"><use href="#i-pen"/></svg>
-      <span><strong>إدراج التوقيع في ملف PDF</strong><small>رسم التوقيع أو رفع صورته ووضعه في أي صفحة</small></span>
-    </button>
+  <nav class="home" id="home" aria-label="الأدوات">
+    <a class="tool-card" href="#qr">
+      <svg class="ic" aria-hidden="true"><use href="#i-qr"/></svg>
+      <span class="txt"><strong>تحويل الرابط إلى باركود</strong><small>إنشاء رمز QR قابل للمسح والتنزيل بصيغتي PNG وSVG</small></span>
+      <svg class="go" aria-hidden="true"><use href="#i-next"/></svg>
+    </a>
+    <a class="tool-card" href="#sign">
+      <svg class="ic" aria-hidden="true"><use href="#i-pen"/></svg>
+      <span class="txt"><strong>التوقيع والكتابة على ملف PDF</strong><small>رسم التوقيع أو رفع صورته، وكتابة النصوص في أي موضع من الملف</small></span>
+      <svg class="go" aria-hidden="true"><use href="#i-next"/></svg>
+    </a>
+    <a class="tool-card" href="#word">
+      <svg class="ic" aria-hidden="true"><use href="#i-word"/></svg>
+      <span class="txt"><strong>تحويل ملف PDF إلى Word</strong><small>تحويل الملف إلى مستند Word مع الحفاظ على تنسيقه ومواضع عناصره</small></span>
+      <svg class="go" aria-hidden="true"><use href="#i-next"/></svg>
+    </a>
+  </nav>
+
+  <div class="view-bar" id="view-bar" hidden>
+    <a class="btn" href="#"><svg aria-hidden="true"><use href="#i-prev"/></svg>الصفحة الرئيسية</a>
+    <h2 id="view-title"></h2>
   </div>
 
   <!-- QR -->
-  <section id="panel-qr" role="tabpanel" aria-labelledby="tab-qr">
+  <section id="panel-qr" hidden>
     <div class="qr-grid">
       <div class="card">
         <div class="field">
@@ -314,7 +348,7 @@ main.wrap{padding-bottom:40px}
   </section>
 
   <!-- Sign PDF -->
-  <section id="panel-sign" role="tabpanel" aria-labelledby="tab-sign" hidden>
+  <section id="panel-sign" hidden>
     <div class="sign-grid">
       <aside class="card side">
         <section>
@@ -405,6 +439,44 @@ main.wrap{padding-bottom:40px}
       </div>
     </div>
   </section>
+  <!-- PDF to Word -->
+  <section id="panel-word" hidden>
+    <div class="qr-grid">
+      <div class="card">
+        <div class="drop small-drop" id="w-drop">
+          <svg aria-hidden="true"><use href="#i-file"/></svg>
+          <div>اسحب ملف PDF وأفلته هنا</div>
+          <button class="btn" id="w-pick" type="button">أو اختر ملفًا من الجهاز</button>
+        </div>
+        <input id="w-input" type="file" accept="application/pdf,.pdf" class="sr" tabindex="-1">
+        <p class="filename" id="w-name" hidden></p>
+
+        <fieldset class="modes">
+          <legend>طريقة التحويل</legend>
+          <label class="mode">
+            <input type="radio" name="w-mode" value="edit" checked>
+            <span><strong>مطابقة التنسيق مع نص قابل للتعديل</strong><small>تبقى النصوص والخطوط والألوان والجداول والصور في مواضعها، ويمكن تعديل النص في Word.</small></span>
+          </label>
+          <label class="mode">
+            <input type="radio" name="w-mode" value="image">
+            <span><strong>نسخة مصوّرة مطابقة تمامًا</strong><small>تُنقل كل صفحة كما هي بدقة عالية، ولكن النص لا يقبل التعديل.</small></span>
+          </label>
+        </fieldset>
+
+        <button class="btn primary block" id="w-convert" disabled><svg aria-hidden="true"><use href="#i-down"/></svg>تحويل وتنزيل ملف Word</button>
+        <div class="progress" id="w-progress" hidden><div class="bar" id="w-bar"></div></div>
+        <p class="hint" id="w-status" aria-live="polite"></p>
+      </div>
+
+      <div class="card preview">
+        <div class="w-preview" id="w-preview">
+          <canvas id="w-canvas" dir="ltr" hidden aria-label="معاينة الصفحة الأولى"></canvas>
+          <p class="empty" id="w-empty">تظهر هنا معاينة الصفحة الأولى بعد اختيار الملف.</p>
+        </div>
+        <p class="hint" id="w-info"></p>
+      </div>
+    </div>
+  </section>
 </main>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -412,6 +484,7 @@ main.wrap{padding-bottom:40px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 (function(){
 "use strict";
@@ -450,25 +523,29 @@ async function saveFile(name, blob){
   toast('تم تنزيل الملف.');
 }
 
-/* ---------- Tabs ---------- */
-const tabs = [...document.querySelectorAll('[role=tab]')];
-function selectTab(t){
-  tabs.forEach(x => {
-    const on = x === t;
-    x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1;
-    $('#' + x.getAttribute('aria-controls')).hidden = !on;
+/* ---------- Home and tool views ---------- */
+const VIEWS = {
+  qr:   { panel:'panel-qr',   title:'تحويل الرابط إلى باركود' },
+  sign: { panel:'panel-sign', title:'التوقيع والكتابة على ملف PDF' },
+  word: { panel:'panel-word', title:'تحويل ملف PDF إلى Word' }
+};
+function route(){
+  const v = VIEWS[location.hash.slice(1)] || null;
+  $('#home').hidden = !!v;
+  document.body.classList.toggle('is-home', !v);
+  $('#view-bar').hidden = !v;
+  Object.values(VIEWS).forEach(x => { $('#' + x.panel).hidden = !v || x !== v; });
+  if (v) $('#view-title').textContent = v.title;
+  document.title = (v ? v.title + ' | ' : '') + 'أدوات الباركود والتوقيع | جمعية فرقان';
+  window.scrollTo(0, 0);
+  if (v === VIEWS.sign) requestAnimationFrame(() => {
+    sizePad();
+    if (pdfDoc){ lastStageW = $('#stage').clientWidth; renderPage(); }
   });
-  if (t.id === 'tab-sign') requestAnimationFrame(sizePad);
+  if (v === VIEWS.qr) requestAnimationFrame(() => qrIn.focus({ preventScroll:true }));
 }
-tabs.forEach((t,i) => {
-  t.addEventListener('click', () => selectTab(t));
-  t.addEventListener('keydown', e => {
-    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-    const dir = e.key === 'ArrowLeft' ? 1 : -1; // RTL
-    const n = tabs[(i + dir + tabs.length) % tabs.length];
-    n.focus(); selectTab(n);
-  });
-});
+window.addEventListener('hashchange', route);
+requestAnimationFrame(route);
 
 /* =========================================================
    Tool 1: Link to QR code
@@ -864,10 +941,15 @@ function fontAvailable(name){
 }
 const localFonts = SYS_FONTS.filter(fontAvailable);
 
+const KNOWN_FONTS = ['Times New Roman','Traditional Arabic','Simplified Arabic','Sakkal Majalla','Arabic Typesetting','Segoe UI','Courier New','Arial','Arial Black','Arial Narrow','Calibri','Cambria','Tahoma','Verdana','Georgia','Garamond','Andalus','Aldhabi','Urdu Typesetting','Microsoft Uighur','Microsoft Sans Serif','Dubai','Amiri','Cairo','Tajawal','Almarai','Noto Naskh Arabic','Noto Sans Arabic','Noto Kufi Arabic','DejaVu Sans','DejaVu Serif','Free Serif','Free Sans','Lotus Linotype','AL-Mohanad','Al-Mohanad Bold','Geeza Pro','Baghdad','DecoType Naskh','Diwani Letter','Arabic Transparent','Hacen Liner Screen','GE SS Two','GE SS Text','Helvetica Neue','IBM Plex Sans Arabic','Century Gothic','Book Antiqua','Palatino Linotype','Trebuchet MS','Franklin Gothic Medium','Lucida Sans','Bahij TheSansArabic','KFGQPC Uthmanic Script HAFS'];
+const KNOWN_MAP = Object.fromEntries(KNOWN_FONTS.map(f => [f.toLowerCase().replace(/[\s\-_]/g, ''), f]));
 function cleanFontName(raw){
   let n = String(raw || '').replace(/^[A-Z]{6}\+/, '');
   n = n.replace(/[,\-](Bold|Italic|BoldItalic|Regular|Roman|Black|Light|Medium|SemiBold|Semibold|Oblique|Heavy|Book).*$/i, '');
   n = n.replace(/PSMT$/, '').replace(/MT$/, '').replace(/PS$/, '');
+  n = n.replace(/(Bold|Italic|Oblique|Regular|Black)+$/, '');
+  const key = n.toLowerCase().replace(/[\s\-_,]/g, '');
+  if (KNOWN_MAP[key]) return KNOWN_MAP[key];
   n = n.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[_]+/g, ' ').replace(/\s+/g, ' ').trim();
   return n;
 }
@@ -1353,6 +1435,425 @@ $('#pdf-save').addEventListener('click', async () => {
     btn.lastChild.textContent = label; updateState();
   }
 });
+
+/* =========================================================
+   Tool 3: PDF to Word
+   ========================================================= */
+const WRD = { doc:null, name:'', busy:false };
+const XMLNS_W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+
+function xmlEsc(s){
+  return String(s)
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/g, '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+const tw = pt => Math.round(pt * 20);
+const emu = pt => Math.round(pt * 12700);
+
+$('#w-pick').addEventListener('click', () => $('#w-input').click());
+$('#w-input').addEventListener('change', e => { const f = e.target.files[0]; e.target.value = ''; if (f) openWordPdf(f); });
+const wDrop = $('#w-drop');
+['dragenter','dragover'].forEach(t => wDrop.addEventListener(t, e => { e.preventDefault(); wDrop.classList.add('over'); }));
+['dragleave','drop'].forEach(t => wDrop.addEventListener(t, e => { e.preventDefault(); wDrop.classList.remove('over'); }));
+wDrop.addEventListener('drop', e => {
+  const f = [...(e.dataTransfer.files || [])].find(x => x.type === 'application/pdf' || /\.pdf$/i.test(x.name));
+  if (f) openWordPdf(f); else toast('يُرجى إفلات ملف بصيغة PDF.');
+});
+
+async function openWordPdf(file){
+  if (WRD.busy) return;
+  try {
+    const buf = new Uint8Array(await file.arrayBuffer());
+    const doc = await pdfjsLib.getDocument({
+      data: buf,
+      cMapUrl: PDFJS_ASSETS + 'cmaps/', cMapPacked: true,
+      standardFontDataUrl: PDFJS_ASSETS + 'standard_fonts/'
+    }).promise;
+    if (WRD.doc) WRD.doc.destroy();
+    WRD.doc = doc; WRD.name = file.name;
+    $('#w-name').hidden = false;
+    $('#w-name').textContent = `${file.name}، عدد الصفحات: ${doc.numPages}`;
+    $('#w-convert').disabled = false;
+    setWStatus('', 0, true);
+
+    // Preview of the first page and a check for readable text
+    const page = await doc.getPage(1);
+    const vp0 = page.getViewport({ scale:1 });
+    const box = $('#w-preview');
+    const scale = Math.min(2, (box.clientWidth || 360) / vp0.width) * 1.5;
+    const vp = page.getViewport({ scale });
+    const c = $('#w-canvas');
+    c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
+    c.hidden = false; $('#w-empty').hidden = true;
+    await page.render({ canvasContext:c.getContext('2d'), viewport:vp }).promise;
+
+    let chars = 0;
+    for (let i = 1; i <= Math.min(3, doc.numPages); i++){
+      const tc = await (await doc.getPage(i)).getTextContent();
+      tc.items.forEach(it => { chars += (it.str || '').trim().length; });
+    }
+    $('#w-info').textContent = chars > 20
+      ? 'يحتوي الملف على نص قابل للقراءة، وسيكون النص قابلًا للتعديل في ملف Word.'
+      : 'يبدو أن الملف ممسوح ضوئيًا ولا يحتوي على نص قابل للقراءة، لذا ستُحوَّل صفحاته إلى صور مطابقة للأصل.';
+  } catch(err){
+    if (err && err.name === 'PasswordException') toast('الملف محمي بكلمة مرور، ولا يمكن فتحه.');
+    else toast('تعذّر فتح الملف. يُرجى التأكد من أنه ملف PDF سليم.');
+  }
+}
+
+function setWStatus(text, frac, hideBar){
+  $('#w-status').textContent = text;
+  $('#w-progress').hidden = !!hideBar;
+  $('#w-bar').style.width = Math.round((frac || 0) * 100) + '%';
+}
+
+function wordFontName(raw){
+  let n = cleanFontName(raw);
+  const k = n.toLowerCase();
+  if (!n) return 'Arial';
+  if (k === 'times' || k === 'times roman') return 'Times New Roman';
+  if (k === 'helvetica' || k === 'arial mt') return 'Arial';
+  if (k === 'courier') return 'Courier New';
+  return n;
+}
+
+const AR_LETTER = /[\u0590-\u05FF\u0600-\u065F\u066A-\u06EF\u06FA-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/;
+const LTR_CHAR = /[A-Za-z0-9\u00C0-\u024F\u0370-\u03FF\u0400-\u04FF\u0660-\u0669\u06F0-\u06F9]/;
+const MARK_ONLY = /^[\u064B-\u065F\u0670\u06D6-\u06ED\u0300-\u036F]+$/;
+function unitClass(u){ return AR_LETTER.test(u) ? 'R' : LTR_CHAR.test(u) ? 'L' : 'N'; }
+
+function visualToLogical(units, baseRtl){
+  const cls = units.map(x => unitClass(x.u));
+  for (let i = 0; i < cls.length; i++){
+    if (cls[i] !== 'N') continue;
+    let p = null, n = null;
+    for (let j = i - 1; j >= 0; j--) if (cls[j] !== 'N' && cls[j] !== 'n'){ p = cls[j]; break; }
+    for (let j = i + 1; j < cls.length; j++) if (cls[j] !== 'N' && cls[j] !== 'n'){ n = cls[j]; break; }
+    cls[i] = 'n' + ((p && p === n) ? p : (baseRtl ? 'R' : 'L'));
+  }
+  const runs = [];
+  units.forEach((u, i) => {
+    const c = cls[i].slice(-1);
+    if (runs.length && runs[runs.length - 1].c === c) runs[runs.length - 1].u.push(u.u);
+    else runs.push({ c, u:[u.u] });
+  });
+  const ordered = baseRtl ? runs.reverse() : runs;
+  return ordered.map(r => (r.c === 'R' ? r.u.slice().reverse() : r.u).join('')).join('');
+}
+
+async function extractLines(page, vp1){
+  const OPS = pdfjsLib.OPS, U = pdfjsLib.Util;
+  const ol = await page.getOperatorList();
+  const fns = ol.fnArray, argsArr = ol.argsArray;
+  let st = { ctm:[1,0,0,1,0,0], font:null, size:0, tc:0, tw:0, tz:1, tl:0, rise:0, mode:0 };
+  const stack = [];
+  let tm = [1,0,0,1,0,0], lx = 0, ly = 0, x = 0, y = 0;
+  const runs = [], fontCache = {};
+  const getFont = name => {
+    if (!(name in fontCache)){
+      let f = null;
+      try { if (page.commonObjs.has(name)) f = page.commonObjs.get(name); } catch(e){}
+      fontCache[name] = f;
+    }
+    return fontCache[name];
+  };
+  const moveText = (dx, dy) => { x = lx += dx; y = ly += dy; };
+  const clone = () => Object.assign({}, st, { ctm:st.ctm.slice() });
+
+  function show(glyphs){
+    if (!glyphs || !st.size) return;
+    const f = getFont(st.font);
+    const fm = (f && f.fontMatrix) || [0.001, 0, 0, 0.001, 0, 0];
+    const fontSize = Math.abs(st.size), dirSign = st.size < 0 ? -1 : 1;
+    const hscale = st.tz * dirSign, was = fontSize * fm[0];
+    const vertical = !!(f && f.vertical);
+    const M = U.transform(vp1.transform, U.transform(st.ctm, tm));
+    const invisible = st.mode === 3 || st.mode === 7 || Math.abs(M[1]) > Math.abs(M[0]) * 0.05;
+    let acc = 0;
+    const units = [];
+    for (const g of glyphs){
+      if (typeof g === 'number'){ acc += -g * fontSize / 1000; continue; }
+      if (!g) continue;
+      const w = g.width || 0;
+      const spacing = (g.isSpace ? st.tw : 0) + st.tc;
+      if (!vertical && !invisible){
+        const p0 = U.applyTransform([x + acc * hscale, y + st.rise], M);
+        const p1 = U.applyTransform([x + (acc + w * was) * hscale, y + st.rise], M);
+        const u = String(g.unicode || '').normalize('NFKC').replace(/[\u0000-\u001F\u007F]/g, '');
+        // zero-width glyphs that are not diacritics are invisible placeholders
+        if (!(w === 0 && u && !MARK_ONLY.test(u)))
+          units.push({ u, x0:Math.min(p0[0], p1[0]), x1:Math.max(p0[0], p1[0]), y:p0[1], space:!!g.isSpace || /^\s+$/.test(u) });
+      }
+      acc += w * was + spacing * dirSign;
+    }
+    x += acc * hscale;
+    const real = units.filter(u => u.u);
+    if (!real.length) return;
+    // Stream order drawn right-to-left means it is already logical: turn it into visual order
+    let dec = 0, inc = 0;
+    for (let i = 1; i < real.length; i++){ if (real[i].x0 < real[i - 1].x0 - 0.1) dec++; else if (real[i].x0 > real[i - 1].x0 + 0.1) inc++; }
+    if (dec > inc) real.reverse();
+    const size = Math.hypot(M[2], M[3]) * fontSize;
+    runs.push({ units:real, size, font:st.font, f, y:real[0].y,
+      x0:Math.min(...real.map(u => u.x0)), x1:Math.max(...real.map(u => u.x1)) });
+  }
+
+  for (let i = 0; i < fns.length; i++){
+    const a = argsArr[i];
+    switch (fns[i]){
+      case OPS.save: stack.push(clone()); break;
+      case OPS.restore: if (stack.length) st = stack.pop(); break;
+      case OPS.transform: st.ctm = U.transform(st.ctm, a); break;
+      case OPS.paintFormXObjectBegin:
+        stack.push(clone());
+        if (Array.isArray(a[0]) && a[0].length === 6) st.ctm = U.transform(st.ctm, a[0]);
+        break;
+      case OPS.paintFormXObjectEnd: if (stack.length) st = stack.pop(); break;
+      case OPS.beginText: tm = [1,0,0,1,0,0]; x = lx = y = ly = 0; break;
+      case OPS.setFont: st.font = a[0]; st.size = a[1]; break;
+      case OPS.setTextMatrix: tm = (Array.isArray(a[0]) ? a[0] : a).slice(0, 6); x = lx = y = ly = 0; break;
+      case OPS.moveText: moveText(a[0], a[1]); break;
+      case OPS.setLeadingMoveText: st.tl = a[1]; moveText(a[0], a[1]); break;
+      case OPS.setLeading: st.tl = -a[0]; break;
+      case OPS.nextLine: moveText(0, st.tl); break;
+      case OPS.setCharSpacing: st.tc = a[0]; break;
+      case OPS.setWordSpacing: st.tw = a[0]; break;
+      case OPS.setHScale: st.tz = a[0] / 100; break;
+      case OPS.setTextRise: st.rise = a[0]; break;
+      case OPS.setTextRenderingMode: st.mode = a[0]; break;
+      case OPS.showText: case OPS.showSpacedText: show(a[0]); break;
+      case OPS.nextLineShowText: moveText(0, st.tl); show(a[0]); break;
+      case OPS.nextLineSetSpacingShowText: st.tw = a[0]; st.tc = a[1]; moveText(0, st.tl); show(a[2]); break;
+    }
+  }
+
+  // Group runs into lines
+  runs.sort((p, q) => p.y - q.y || p.x0 - q.x0);
+  const lines = [];
+  for (const r of runs){
+    let line = null;
+    for (let i = lines.length - 1; i >= 0 && i >= lines.length - 60; i--){
+      const L = lines[i];
+      if (Math.abs(L.y - r.y) > Math.max(L.size, r.size) * 0.35) continue;
+      if (L.font !== r.font || Math.abs(L.size - r.size) > Math.max(0.6, L.size * 0.08)) continue;
+      const gap = Math.max(L.x0 - r.x1, r.x0 - L.x1);
+      if (gap > Math.max(L.size, r.size) * 1.1) continue;
+      line = L; break;
+    }
+    if (!line){ line = { runs:[], y:r.y, size:r.size, font:r.font, f:r.f, x0:r.x0, x1:r.x1 }; lines.push(line); }
+    line.runs.push(r);
+    line.x0 = Math.min(line.x0, r.x0); line.x1 = Math.max(line.x1, r.x1);
+  }
+
+  const out = [];
+  for (const L of lines){
+    L.runs.sort((p, q) => p.x0 - q.x0);
+    // visual order of units; attach diacritic-only glyphs to their base letters
+    const vis = [];
+    for (const r of L.runs) for (const u of r.units){
+      if (MARK_ONLY.test(u.u) && vis.length){
+        const c = (u.x0 + u.x1) / 2;
+        let host = vis[vis.length - 1];
+        for (let k = vis.length - 1; k >= 0 && k >= vis.length - 4; k--){
+          if (c >= vis[k].x0 - 0.5 && c <= vis[k].x1 + 0.5 && !MARK_ONLY.test(vis[k].u)){ host = vis[k]; break; }
+        }
+        host.u += u.u;
+        continue;
+      }
+      vis.push(Object.assign({}, u));
+    }
+    // insert spaces where there is a visible gap
+    const withSp = [];
+    vis.forEach((u, i) => {
+      if (i){
+        const prev = withSp[withSp.length - 1];
+        const gap = u.x0 - prev.x1;
+        if (gap > L.size * 0.2 && !prev.space && !u.space) withSp.push({ u:' ', x0:prev.x1, x1:u.x0, space:true });
+      }
+      withSp.push(u);
+    });
+    const rChars = withSp.reduce((n, u) => n + (unitClass(u.u) === 'R' ? u.u.length : 0), 0);
+    const lChars = withSp.reduce((n, u) => n + (unitClass(u.u) === 'L' ? u.u.length : 0), 0);
+    const rtl = rChars > 0 && rChars >= lChars;
+    const text = visualToLogical(withSp, rtl).replace(/\s+/g, ' ').trim();
+    if (!text) continue;
+    const raw = (L.f && L.f.name) || '';
+    out.push({
+      text, rtl, x0:L.x0, x1:L.x1, base:L.y, size:L.size,
+      font:wordFontName(raw), bold:!!(L.f && (L.f.bold || L.f.black)) || /bold|black|heavy/i.test(raw)
+    });
+  }
+  return out;
+}
+
+function pageColor(fullData, bgData, W, H, S, ln){
+  const x0 = clamp(Math.floor(ln.x0 * S), 0, W - 1), x1 = clamp(Math.ceil(ln.x1 * S), 0, W - 1);
+  const y0 = clamp(Math.floor((ln.base - ln.size * 0.85) * S), 0, H - 1), y1 = clamp(Math.ceil((ln.base + ln.size * 0.25) * S), 0, H - 1);
+  let best = 0, col = [0, 0, 0];
+  const step = (x1 - x0) * (y1 - y0) > 60000 ? 2 : 1;
+  for (let y = y0; y <= y1; y += step) for (let x = x0; x <= x1; x += step){
+    const i = (y * W + x) * 4;
+    const d = Math.abs(fullData[i] - bgData[i]) + Math.abs(fullData[i + 1] - bgData[i + 1]) + Math.abs(fullData[i + 2] - bgData[i + 2]);
+    if (d > best){ best = d; col = [fullData[i], fullData[i + 1], fullData[i + 2]]; }
+  }
+  if (best < 60) return null;
+  if (Math.max(...col) < 70) return '000000';
+  return col.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase();
+}
+
+function isBlank(data){
+  for (let i = 0; i < data.length; i += 16){
+    if (data[i] < 245 || data[i + 1] < 245 || data[i + 2] < 245) return false;
+  }
+  return true;
+}
+
+function canvasBlob(c, type, q){ return new Promise(r => c.toBlob(r, type, q)); }
+
+function anchorXml(rid, n, wPt, hPt){
+  return `<w:r><w:drawing><wp:anchor distT="0" distB="0" distL="0" distR="0" simplePos="0" relativeHeight="${n}" behindDoc="1" locked="1" layoutInCell="1" allowOverlap="1">`
+    + `<wp:simplePos x="0" y="0"/><wp:positionH relativeFrom="page"><wp:posOffset>0</wp:posOffset></wp:positionH>`
+    + `<wp:positionV relativeFrom="page"><wp:posOffset>0</wp:posOffset></wp:positionV>`
+    + `<wp:extent cx="${emu(wPt)}" cy="${emu(hPt)}"/><wp:effectExtent l="0" t="0" r="0" b="0"/><wp:wrapNone/>`
+    + `<wp:docPr id="${n}" name="Page ${n}"/><wp:cNvGraphicFramePr><a:graphicFrameLocks noChangeAspect="1"/></wp:cNvGraphicFramePr>`
+    + `<a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic>`
+    + `<pic:nvPicPr><pic:cNvPr id="${n}" name="page${n}"/><pic:cNvPicPr/></pic:nvPicPr>`
+    + `<pic:blipFill><a:blip r:embed="${rid}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill>`
+    + `<pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${emu(wPt)}" cy="${emu(hPt)}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr>`
+    + `</pic:pic></a:graphicData></a:graphic></wp:anchor></w:drawing></w:r>`;
+}
+
+function frameXml(ln, pageW){
+  const slack = (ln.x1 - ln.x0) * 0.35 + ln.size * 1.5;
+  let fw = (ln.x1 - ln.x0) + slack;
+  let x = ln.rtl ? ln.x1 - fw : ln.x0;
+  if (x < 0){ fw += x; x = 0; }
+  if (x + fw > pageW) fw = pageW - x;
+  const lineH = ln.size * 1.2;
+  const y = Math.max(0, ln.base - ln.size * 0.98);
+  const hp = Math.max(2, Math.round(ln.size * 2));
+  const f = xmlEsc(ln.font);
+  return `<w:p><w:pPr><w:framePr w:w="${tw(fw)}" w:wrap="around" w:vAnchor="page" w:hAnchor="page" w:x="${tw(x)}" w:y="${tw(y)}"/>`
+    + (ln.rtl ? '<w:bidi/>' : '')
+    + `<w:spacing w:before="0" w:after="0" w:line="${tw(lineH)}" w:lineRule="exact"/><w:ind w:left="0" w:right="0"/></w:pPr>`
+    + `<w:r><w:rPr><w:rFonts w:ascii="${f}" w:hAnsi="${f}" w:cs="${f}" w:eastAsia="${f}"/>`
+    + (ln.bold ? '<w:b/><w:bCs/>' : '')
+    + `<w:color w:val="${ln.color}"/><w:sz w:val="${hp}"/><w:szCs w:val="${hp}"/>`
+    + (ln.rtl ? '<w:rtl/>' : '')
+    + `</w:rPr><w:t xml:space="preserve">${xmlEsc(ln.text)}</w:t></w:r></w:p>`;
+}
+
+const TINY_P = '<w:spacing w:before="0" w:after="0" w:line="20" w:lineRule="exact"/><w:rPr><w:sz w:val="2"/><w:szCs w:val="2"/></w:rPr>';
+function sectXml(wPt, hPt){
+  return `<w:sectPr><w:pgSz w:w="${tw(wPt)}" w:h="${tw(hPt)}"${wPt > hPt ? ' w:orient="landscape"' : ''}/>`
+    + `<w:pgMar w:top="0" w:right="0" w:bottom="0" w:left="0" w:header="0" w:footer="0" w:gutter="0"/></w:sectPr>`;
+}
+
+async function convertToWord(mode){
+  const doc = WRD.doc, n = doc.numPages;
+  const zip = new JSZip();
+  const rels = [];
+  let body = '', textPages = 0;
+  const S = mode === 'image' ? 2.5 : 2;
+  for (let i = 1; i <= n; i++){
+    setWStatus(`جارٍ تحويل الصفحة ${i} من ${n}...`, (i - 1) / n);
+    const page = await doc.getPage(i);
+    const vp1 = page.getViewport({ scale:1 });
+    const vp = page.getViewport({ scale:S });
+    const W = Math.ceil(vp.width), H = Math.ceil(vp.height);
+    let lines = [];
+    if (mode === 'edit'){
+      const tc = await page.getTextContent();
+      if (tc.items.some(it => (it.str || '').trim())) lines = null; // filled after rendering
+    }
+
+    // Background: the page without its text (or the full page in image mode)
+    const bg = document.createElement('canvas'); bg.width = W; bg.height = H;
+    const bctx = bg.getContext('2d');
+    bctx.fillStyle = '#FFFFFF'; bctx.fillRect(0, 0, W, H);
+    const hideText = mode === 'edit' && lines === null;
+    if (hideText){
+      // Hide horizontal text only; rotated text stays in the background image
+      const keep = c => { const T = c.getTransform(); return Math.abs(T.b) > Math.abs(T.a) * 0.05 || Math.abs(T.c) > Math.abs(T.d) * 0.05; };
+      const of = bctx.fillText.bind(bctx), os = bctx.strokeText.bind(bctx);
+      bctx.fillText = function(t, px, py, m){ if (keep(bctx)) of(t, px, py, m); };
+      bctx.strokeText = function(t, px, py, m){ if (keep(bctx)) os(t, px, py, m); };
+    }
+    await page.render({ canvasContext:bctx, viewport:vp }).promise;
+
+    if (hideText){
+      const full = document.createElement('canvas'); full.width = W; full.height = H;
+      const fctx = full.getContext('2d');
+      fctx.fillStyle = '#FFFFFF'; fctx.fillRect(0, 0, W, H);
+      await page.render({ canvasContext:fctx, viewport:vp }).promise;
+      lines = await extractLines(page, vp1);
+      const fd = fctx.getImageData(0, 0, W, H).data, bd = bctx.getImageData(0, 0, W, H).data;
+      lines.forEach(ln => { ln.color = pageColor(fd, bd, W, H, S, ln); });
+      // Text that was not hidden from the background (drawn as shapes) stays in the image only
+      lines = lines.filter(ln => ln.color);
+      if (!lines.length){
+        // Nothing editable on this page: use the full rendering as the background
+        bctx.drawImage(full, 0, 0);
+      }
+      full.width = full.height = 0;
+      if (lines.length) textPages++;
+    } else lines = [];
+
+    let para = `<w:p><w:pPr>${TINY_P}</w:pPr>`;
+    const blank = isBlank(bctx.getImageData(0, 0, W, H).data);
+    if (!blank){
+      const blob = await canvasBlob(bg, 'image/png');
+      const name = `page${i}.png`;
+      zip.file('word/media/' + name, blob);
+      const rid = 'rIdImg' + i;
+      rels.push(`<Relationship Id="${rid}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/${name}"/>`);
+      para += anchorXml(rid, i, vp1.width, vp1.height);
+    }
+    para += '</w:p>';
+    bg.width = bg.height = 0;
+
+    body += para;
+    lines.forEach(ln => { body += frameXml(ln, vp1.width); });
+    if (i < n) body += `<w:p><w:pPr>${TINY_P}${sectXml(vp1.width, vp1.height)}</w:pPr></w:p>`;
+    else body += sectXml(vp1.width, vp1.height);
+    page.cleanup();
+  }
+
+  setWStatus('جارٍ إنشاء ملف Word...', 0.98);
+  const documentXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>`
+    + `<w:document xmlns:w="${XMLNS_W}" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"`
+    + ` xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"`
+    + ` xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"`
+    + ` xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:body>${body}</w:body></w:document>`;
+  zip.file('[Content_Types].xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/></Types>`);
+  zip.file('_rels/.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`);
+  zip.file('word/_rels/document.xml.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rIdSettings" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>${rels.join('')}</Relationships>`);
+  zip.file('word/styles.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="${XMLNS_W}"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" w:eastAsia="Arial"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="en-US" w:bidi="ar-SA"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="0" w:line="240" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style></w:styles>`);
+  zip.file('word/settings.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:settings xmlns:w="${XMLNS_W}"><w:compat><w:compatSetting w:name="compatibilityMode" w:uri="http://schemas.microsoft.com/office/word" w:val="15"/></w:compat></w:settings>`);
+  zip.file('word/document.xml', documentXml);
+  const blob = await zip.generateAsync({ type:'blob', compression:'DEFLATE', mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+  return { blob, textPages };
+}
+
+$('#w-convert').addEventListener('click', async () => {
+  if (!WRD.doc || WRD.busy) return;
+  WRD.busy = true;
+  const btn = $('#w-convert'); btn.disabled = true;
+  const mode = document.querySelector('input[name="w-mode"]:checked').value;
+  try {
+    const { blob, textPages } = await convertToWord(mode);
+    setWStatus('اكتمل التحويل.', 1);
+    const name = WRD.name.replace(/\.pdf$/i, '') + '.docx';
+    await saveFile(name, blob);
+    if (mode === 'edit' && !textPages) toast('لا يحتوي الملف على نص قابل للقراءة، فحُوِّلت صفحاته إلى صور.');
+  } catch(err){
+    setWStatus('', 0, true);
+    toast('تعذّر تحويل الملف. قد يكون الملف تالفًا أو كبيرًا جدًّا.');
+  } finally {
+    WRD.busy = false; btn.disabled = false;
+  }
+});
+
 
 buildFontSelect(null);
 syncDefaultsToControls();
