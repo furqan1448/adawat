@@ -1,0 +1,1357 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>أدوات الباركود والتوقيع | جمعية فرقان</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Reem+Kufi:wght@500;700&family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&family=Cairo:wght@400;700&family=Tajawal:wght@400;700&family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F4F3; --surface:#FFFFFF; --ink:#2A1C1F; --muted:#6B5F61; --line:#E0D8D8;
+  --brand:#740C1F; --brand-ink:#FFFFFF; --brand-soft:#F4E7E9; --stage:#E9E6E4;
+  --danger:#B23A1E; --focus:#B89568;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#151012; --surface:#1E181A; --ink:#EEE6E7; --muted:#A99D9F; --line:#3A2F32;
+    --brand:#D27A8A; --brand-ink:#2A060D; --brand-soft:#2E1A1E; --stage:#0E0B0C;
+    --danger:#E58372; --focus:#D2B489;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#151012; --surface:#1E181A; --ink:#EEE6E7; --muted:#A99D9F; --line:#3A2F32;
+  --brand:#D27A8A; --brand-ink:#2A060D; --brand-soft:#2E1A1E; --stage:#0E0B0C;
+  --danger:#E58372; --focus:#D2B489;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+  font-size:1rem; line-height:1.7;
+}
+.wrap{max-width:1180px; margin:0 auto; padding:0 20px}
+:focus-visible{outline:2px solid var(--focus); outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+
+/* Header */
+.top{padding:36px 0 22px}
+.top h1{
+  font-family:"Reem Kufi","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  font-weight:700; font-size:clamp(1.9rem,4.5vw,2.8rem); line-height:1.25;
+  margin:0; color:var(--brand);
+}
+.top p{margin:6px 0 0; color:var(--muted); max-width:60ch}
+.brand{display:flex; align-items:center; gap:20px}
+.logo-tile{flex:none; width:96px; height:110px; background:#FFFFFF; border-radius:18px; border:1px solid var(--line); display:grid; place-items:center; padding:10px}
+.logo-tile img{max-width:100%; max-height:100%; display:block}
+@media (max-width:560px){ .brand{gap:14px} .logo-tile{width:70px; height:82px; border-radius:14px; padding:7px} }
+
+/* Tabs */
+.tabs{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px}
+.tab{
+  display:flex; gap:14px; align-items:center; text-align:start;
+  padding:16px 18px; border:1px solid var(--line); border-radius:14px;
+  background:var(--surface); color:var(--ink); cursor:pointer; font:inherit;
+  transition:background .15s, border-color .15s;
+}
+.tab svg{flex:none; width:34px; height:34px}
+.tab strong{display:block; font-size:1.05rem; font-weight:600}
+.tab small{display:block; color:var(--muted); font-size:.86rem; line-height:1.5}
+.tab[aria-selected="true"]{background:var(--brand); border-color:var(--brand); color:var(--brand-ink)}
+.tab[aria-selected="true"] small{color:inherit; opacity:.85}
+
+/* Cards and forms */
+.card{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:20px}
+label{display:block; font-weight:500; font-size:.92rem; margin:0 0 6px}
+input[type=url],input[type=text],input[type=number],select{
+  width:100%; font:inherit; color:var(--ink); background:var(--bg);
+  border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+}
+input[type=url]{text-align:left}
+input[type=color]{width:100%; height:44px; padding:3px; border:1px solid var(--line); border-radius:8px; background:var(--bg); cursor:pointer}
+.field{margin-bottom:16px}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.hint{color:var(--muted); font-size:.86rem; margin:6px 0 0; line-height:1.6}
+.hint.err{color:var(--danger)}
+.check{display:flex; align-items:center; gap:8px; font-weight:400; cursor:pointer}
+.check input{width:18px; height:18px; accent-color:var(--brand)}
+
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  font:inherit; font-weight:500; padding:10px 16px; border-radius:8px;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink); cursor:pointer;
+}
+.btn svg{width:18px; height:18px; flex:none}
+.btn:hover:not(:disabled){border-color:var(--brand)}
+.btn.primary{background:var(--brand); border-color:var(--brand); color:var(--brand-ink)}
+.btn:disabled{opacity:.45; cursor:not-allowed}
+.btn.block{width:100%}
+.btn.ghost{border-color:transparent; background:transparent; padding:8px 10px}
+.actions{display:flex; gap:10px; flex-wrap:wrap}
+
+/* QR tool */
+.qr-grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px; align-items:start}
+.qr-stage{
+  aspect-ratio:1/1; width:100%; max-width:420px; margin:0 auto 14px;
+  display:grid; place-items:center; border-radius:10px;
+  background:repeating-conic-gradient(var(--stage) 0 25%, var(--surface) 0 50%) 0 0/20px 20px;
+}
+.qr-stage canvas{width:100%; height:100%; image-rendering:pixelated; border-radius:6px}
+.empty{color:var(--muted); text-align:center; padding:20px; margin:0}
+.encoded{font-size:.85rem; color:var(--muted); text-align:center; word-break:break-all; margin:0 0 14px; min-height:1.4em}
+.preview .actions{justify-content:center}
+
+/* Sign tool */
+.sign-grid{display:grid; grid-template-columns:340px minmax(0,1fr); gap:20px; align-items:start}
+.side h2{
+  font-family:"Reem Kufi","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  font-size:1.15rem; font-weight:500; margin:0 0 10px; display:flex; gap:10px; align-items:center;
+}
+.side h2 .n{
+  width:26px; height:26px; border-radius:50%; display:inline-grid; place-items:center;
+  background:var(--brand-soft); color:var(--brand); font-size:.85rem; font-family:"IBM Plex Sans Arabic",Tahoma,sans-serif; font-weight:600;
+}
+.side section + section{border-top:1px solid var(--line); margin-top:18px; padding-top:18px}
+.seg{display:flex; background:var(--bg); border:1px solid var(--line); border-radius:9px; padding:3px; margin-bottom:12px}
+.seg button{flex:1; font:inherit; font-size:.92rem; border:0; background:transparent; color:var(--muted); padding:6px; border-radius:6px; cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface); color:var(--ink); box-shadow:0 0 0 1px var(--line)}
+.pad-box{position:relative; border:1px dashed var(--line); border-radius:10px; background:#FFFFFF; overflow:hidden}
+.pad-box::after{content:""; position:absolute; inset:auto 18px 34px 18px; height:1px; background:#D8CFD0; pointer-events:none}
+#pad{display:block; width:100%; height:170px; touch-action:none; cursor:crosshair}
+.pad-tools{display:flex; align-items:center; justify-content:space-between; margin:10px 0 12px}
+.swatches{display:flex; gap:8px; align-items:center}
+.swatch{width:26px; height:26px; border-radius:50%; border:2px solid var(--surface); box-shadow:0 0 0 1px var(--line); cursor:pointer; padding:0}
+.swatch[aria-pressed="true"]{box-shadow:0 0 0 2px var(--brand)}
+.file-drop{
+  display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center;
+  border:1px dashed var(--line); border-radius:10px; padding:18px; cursor:pointer; color:var(--muted);
+}
+.file-drop svg{width:28px; height:28px; color:var(--brand)}
+.sig-list{display:flex; flex-wrap:wrap; gap:8px}
+.sig-item{
+  width:96px; height:56px; border:1px solid var(--line); border-radius:8px; background:#FFFFFF;
+  display:grid; place-items:center; cursor:pointer; padding:6px;
+}
+.sig-item:hover{border-color:var(--brand)}
+.sig-cell{position:relative}
+.sig-cell .sig-del{
+  position:absolute; top:-8px; left:-8px; width:22px; height:22px; border-radius:50%; padding:0;
+  display:grid; place-items:center; background:var(--surface); color:var(--danger);
+  border:1px solid var(--line); cursor:pointer;
+}
+.sig-cell .sig-del svg{width:10px; height:10px}
+.sig-cell .sig-del:hover{border-color:var(--danger)}
+.sig-item img{max-width:100%; max-height:100%}
+.filename{font-size:.88rem; word-break:break-all; margin:8px 0 0}
+
+.viewer{padding:0; overflow:hidden; display:flex; flex-direction:column}
+.viewer-bar{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 14px; border-bottom:1px solid var(--line)}
+.page-num{font-size:.92rem; color:var(--muted)}
+.stage{background:var(--stage); padding:20px; min-height:520px; max-height:80vh; overflow:auto}
+.drop{
+  min-height:480px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;
+  border:2px dashed var(--line); border-radius:12px; text-align:center; color:var(--muted); padding:20px;
+}
+.drop svg{width:44px; height:44px; color:var(--brand)}
+.drop.over{border-color:var(--brand); background:var(--brand-soft)}
+.page-wrap{position:relative; margin:0 auto; background:#FFFFFF; box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.page-wrap canvas{display:block}
+.overlay{position:absolute; inset:0}
+.placed{position:absolute; cursor:move; touch-action:none; outline:1px dashed transparent; outline-offset:2px}
+.placed img{width:100%; height:100%; display:block; pointer-events:none; user-select:none}
+.placed:hover,.placed.sel{outline-color:var(--brand)}
+.placed .handle,.placed .del{display:none; position:absolute; padding:0}
+.placed.sel .handle,.placed.sel .del{display:grid; place-items:center}
+.placed .handle{width:16px; height:16px; right:-9px; bottom:-9px; background:var(--brand); border:2px solid #FFFFFF; border-radius:50%; cursor:nwse-resize}
+.placed .del{width:24px; height:24px; left:-12px; top:-12px; background:var(--danger); color:#FFFFFF; border:2px solid #FFFFFF; border-radius:50%; cursor:pointer}
+.placed .del svg{width:12px; height:12px}
+
+.toast{
+  position:fixed; left:50%; bottom:calc(20px + env(safe-area-inset-bottom,0px)); transform:translate(-50%,20px);
+  background:var(--ink); color:var(--bg); padding:10px 18px; border-radius:8px; font-size:.92rem;
+  opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; max-width:calc(100% - 40px); text-align:center;
+}
+.toast.show{opacity:1; transform:translate(-50%,0)}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
+[hidden]{display:none !important}
+main.wrap{padding-bottom:40px}
+.row3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px}
+.row3 .btn{height:44px; padding:0 8px}
+.btn[aria-pressed="true"]{background:var(--brand-soft); border-color:var(--brand); color:var(--brand)}
+.overlay.placing{cursor:text}
+.placed.text-box{cursor:default; outline-offset:4px}
+.text-box .tx{white-space:pre; unicode-bidi:plaintext; text-align:start; line-height:1.4; outline:none; min-width:1.5ch; cursor:text; padding:0}
+.text-box .tx:empty::before{content:attr(data-ph); color:#A39497; font-weight:400}
+.text-box .mv{display:none; position:absolute; top:-30px; width:24px; height:24px; border-radius:6px; background:var(--brand); color:#FFFFFF; place-items:center; cursor:move; touch-action:none}
+.text-box .mv svg{width:14px; height:14px}
+.text-box.sel .mv{display:grid}
+.text-box[data-anchor="r"] .mv{right:-4px}
+.text-box[data-anchor="l"] .mv{left:-4px}
+.placed.text-box .del{top:-30px}
+.text-box[data-anchor="r"] .del{left:-4px; right:auto}
+.text-box[data-anchor="l"] .del{right:-4px; left:auto}
+.text-box[data-anchor="r"] .handle{left:-9px; right:auto; cursor:nesw-resize}
+.text-box[data-anchor="l"] .handle{right:-9px; left:auto}
+
+@media (max-width:900px){
+  .qr-grid,.sign-grid{grid-template-columns:1fr}
+  .stage{min-height:380px; padding:12px}
+  .drop{min-height:340px}
+}
+@media (max-width:560px){
+  .tabs{grid-template-columns:1fr}
+  .tab small{display:none}
+  .row2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-qr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3.5" y="3.5" width="6" height="6" rx="1"/><rect x="14.5" y="3.5" width="6" height="6" rx="1"/><rect x="3.5" y="14.5" width="6" height="6" rx="1"/>
+      <path d="M14.5 14.5h2.5v2.5M20.5 14.5v0M14.5 20.5h2.5M20.5 18v2.5h-1"/>
+    </symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 4h-7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4"/><path d="M8.5 9h5M8.5 12.5h3"/>
+      <path d="M14 20l.6-2.6 5-5a1.4 1.4 0 0 1 2 2l-5 5L14 20z"/>
+    </symbol>
+    <symbol id="i-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M4.5 19.5h15"/>
+    </symbol>
+    <symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 15.5V4.5m0 0L7.5 9M12 4.5L16.5 9M4.5 15v3.5a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1V15"/>
+    </symbol>
+    <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M13.5 3.5H7a1.5 1.5 0 0 0-1.5 1.5v14A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V8.5l-5-5z"/><path d="M13.5 3.5v5h5"/>
+    </symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 6l-6 6 6 6"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 6l6 6-6 6"/></symbol>
+    <symbol id="i-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7V4.5h14V7M12 4.5v15M9 19.5h6"/></symbol>
+    <symbol id="i-move" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18M12 3l-2.5 2.5M12 3l2.5 2.5M12 21l-2.5-2.5M12 21l2.5-2.5M3 12l2.5-2.5M3 12l2.5 2.5M21 12l-2.5-2.5M21 12l-2.5 2.5"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11" height="11" rx="1.5"/><path d="M15.5 8.5V6A1.5 1.5 0 0 0 14 4.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/></symbol>
+    <symbol id="i-erase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 7h15M9.5 7V5h5v2M6.5 7l1 12.5h9L17.5 7"/></symbol>
+  </defs>
+</svg>
+
+<header class="top">
+  <div class="wrap brand">
+    <div class="logo-tile"><img src="data:image/png;base64,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" alt="شعار جمعية فرقان لتحفيظ القرآن الكريم بالطائف"></div>
+    <div>
+      <h1>أدوات الباركود والتوقيع</h1>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="tabs" role="tablist" aria-label="الأدوات">
+    <button class="tab" role="tab" id="tab-qr" aria-controls="panel-qr" aria-selected="true">
+      <svg aria-hidden="true"><use href="#i-qr"/></svg>
+      <span><strong>تحويل الرابط إلى باركود</strong><small>إنشاء رمز QR قابل للمسح والتنزيل بصيغتي PNG وSVG</small></span>
+    </button>
+    <button class="tab" role="tab" id="tab-sign" aria-controls="panel-sign" aria-selected="false" tabindex="-1">
+      <svg aria-hidden="true"><use href="#i-pen"/></svg>
+      <span><strong>إدراج التوقيع في ملف PDF</strong><small>رسم التوقيع أو رفع صورته ووضعه في أي صفحة</small></span>
+    </button>
+  </div>
+
+  <!-- QR -->
+  <section id="panel-qr" role="tabpanel" aria-labelledby="tab-qr">
+    <div class="qr-grid">
+      <div class="card">
+        <div class="field">
+          <label for="qr-input">الرابط</label>
+          <input id="qr-input" type="url" inputmode="url" dir="ltr" placeholder="https://example.com" autocomplete="off" spellcheck="false">
+          <p class="hint" id="qr-hint">يُقبل رابط أي موقع أو نموذج أو ملف مشترك.</p>
+        </div>
+        <div class="row2 field">
+          <div>
+            <label for="qr-size">الدقة</label>
+            <select id="qr-size">
+              <option value="512">512 × 512 بكسل</option>
+              <option value="1024" selected>1024 × 1024 بكسل</option>
+              <option value="2048">2048 × 2048 بكسل (للطباعة)</option>
+            </select>
+          </div>
+          <div>
+            <label for="qr-ecl">مقاومة التلف</label>
+            <select id="qr-ecl">
+              <option value="L">منخفضة</option>
+              <option value="M" selected>متوسطة</option>
+              <option value="Q">مرتفعة</option>
+              <option value="H">قصوى</option>
+            </select>
+          </div>
+        </div>
+        <div class="row2 field">
+          <div><label for="qr-fg">لون الرمز</label><input id="qr-fg" type="color" value="#000000"></div>
+          <div><label for="qr-bg">لون الخلفية</label><input id="qr-bg" type="color" value="#FFFFFF"></div>
+        </div>
+        <label class="check"><input id="qr-margin" type="checkbox" checked> إضافة هامش أبيض حول الرمز</label>
+        <p class="hint">يُنصح بلون داكن للرمز على خلفية فاتحة لضمان قراءته بالجوال.</p>
+      </div>
+
+      <div class="card preview">
+        <div class="qr-stage">
+          <canvas id="qr-canvas" hidden aria-label="معاينة الباركود"></canvas>
+          <p class="empty" id="qr-empty">ألصق الرابط في الحقل ليظهر الباركود هنا.</p>
+        </div>
+        <p class="encoded" id="qr-encoded" dir="ltr"></p>
+        <div class="actions">
+          <button class="btn primary" id="qr-png" disabled><svg aria-hidden="true"><use href="#i-down"/></svg>تنزيل PNG</button>
+          <button class="btn" id="qr-svg" disabled><svg aria-hidden="true"><use href="#i-down"/></svg>تنزيل SVG</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sign PDF -->
+  <section id="panel-sign" role="tabpanel" aria-labelledby="tab-sign" hidden>
+    <div class="sign-grid">
+      <aside class="card side">
+        <section>
+          <h2><span class="n">١</span>الملف</h2>
+          <button class="btn block" id="pdf-pick"><svg aria-hidden="true"><use href="#i-file"/></svg>اختيار ملف PDF</button>
+          <input id="pdf-input" type="file" accept="application/pdf,.pdf" class="sr" tabindex="-1">
+          <p class="filename" id="pdf-name" hidden></p>
+        </section>
+
+        <section>
+          <h2><span class="n">٢</span>التوقيع</h2>
+          <div class="seg" role="group" aria-label="طريقة إنشاء التوقيع">
+            <button id="mode-draw" aria-pressed="true">رسم</button>
+            <button id="mode-upload" aria-pressed="false">رفع صورة</button>
+          </div>
+
+          <div id="draw-pane">
+            <div class="pad-box"><canvas id="pad" aria-label="مساحة رسم التوقيع"></canvas></div>
+            <div class="pad-tools">
+              <div class="swatches" role="group" aria-label="لون الحبر">
+                <button class="swatch" style="background:#1B2A6B" data-color="#1B2A6B" aria-pressed="true" aria-label="أزرق داكن"></button>
+                <button class="swatch" style="background:#000000" data-color="#000000" aria-pressed="false" aria-label="أسود"></button>
+              </div>
+              <button class="btn ghost" id="pad-clear"><svg aria-hidden="true"><use href="#i-erase"/></svg>مسح</button>
+            </div>
+            <button class="btn block primary" id="pad-save">اعتماد التوقيع</button>
+          </div>
+
+          <div id="upload-pane" hidden>
+            <label class="file-drop" for="sig-file">
+              <svg aria-hidden="true"><use href="#i-up"/></svg>
+              <span>اختيار صورة التوقيع (PNG أو JPG)</span>
+            </label>
+            <input id="sig-file" type="file" accept="image/png,image/jpeg,image/webp" class="sr">
+            <label class="check" style="margin-top:12px"><input id="sig-clean" type="checkbox" checked> إزالة الخلفية البيضاء من الصورة</label>
+          </div>
+
+          <label class="check" style="margin-top:14px"><input id="sig-remember" type="checkbox" checked> حفظ التوقيع على هذا الجهاز لاستخدامه لاحقًا</label>
+
+          <div id="sig-saved" hidden style="margin-top:16px">
+            <label>التواقيع المعتمدة</label>
+            <div class="sig-list" id="sig-list"></div>
+            <p class="hint">يُضاف التوقيع إلى الصفحة الحالية بالنقر عليه، ثم يُسحب إلى موضعه ويُغيَّر حجمه من الدائرة في زاويته. وتبقى التواقيع المحفوظة في متصفح هذا الجهاز فقط.</p>
+          </div>
+        </section>
+
+        <section>
+          <h2><span class="n">٣</span>الكتابة</h2>
+          <button class="btn block" id="add-text" aria-pressed="false" disabled><svg aria-hidden="true"><use href="#i-text"/></svg>إضافة نص</button>
+          <p class="hint" id="text-hint">يُضغط الزر ثم يُنقر على موضع الكتابة في الصفحة.</p>
+          <div class="field" style="margin:14px 0 12px">
+            <label for="tx-font">الخط</label>
+            <select id="tx-font"></select>
+            <p class="hint" id="font-hint">يُتعرَّف على خط الملف ومقاسه تلقائيًا بعد فتحه.</p>
+          </div>
+          <div class="row3">
+            <div><label for="tx-size">المقاس</label><input id="tx-size" type="number" min="4" max="120" step="0.5" value="12" dir="ltr"></div>
+            <div><label for="tx-color">اللون</label><input id="tx-color" type="color" value="#000000"></div>
+            <div><label for="tx-bold">النمط</label><button class="btn block" id="tx-bold" type="button" aria-pressed="false"><b>عريض</b></button></div>
+          </div>
+        </section>
+
+        <section>
+          <h2><span class="n">٤</span>الحفظ</h2>
+          <button class="btn block" id="dup-all" disabled style="margin-bottom:10px"><svg aria-hidden="true"><use href="#i-copy"/></svg>نسخ التوقيع المحدد إلى جميع الصفحات</button>
+          <button class="btn block primary" id="pdf-save" disabled><svg aria-hidden="true"><use href="#i-down"/></svg>تنزيل الملف</button>
+          <p class="hint" id="place-count">لم يُضف أي توقيع أو نص بعد.</p>
+        </section>
+      </aside>
+
+      <div class="card viewer">
+        <div class="viewer-bar">
+          <button class="btn ghost" id="pg-prev" disabled><svg aria-hidden="true"><use href="#i-prev"/></svg>السابقة</button>
+          <span class="page-num" id="pg-num" aria-live="polite">لا يوجد ملف</span>
+          <button class="btn ghost" id="pg-next" disabled>التالية<svg aria-hidden="true"><use href="#i-next"/></svg></button>
+        </div>
+        <div class="stage" id="stage">
+          <div class="drop" id="drop">
+            <svg aria-hidden="true"><use href="#i-file"/></svg>
+            <div>اسحب ملف PDF وأفلته هنا</div>
+            <button class="btn" id="drop-pick">أو اختر ملفًا من الجهاز</button>
+          </div>
+          <div class="page-wrap" id="page-wrap" hidden>
+            <canvas id="pdf-canvas"></canvas>
+            <div class="overlay" id="overlay"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script>
+(function(){
+"use strict";
+const $ = s => document.querySelector(s);
+const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
+
+/* ---------- Toast ---------- */
+let toastTimer;
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+/* ---------- Saving files (Claude artifact or normal browser) ---------- */
+let dlPromise = null;
+function getDownloads(){
+  if (!dlPromise){
+    dlPromise = (window.claude && typeof window.claude.use === 'function')
+      ? window.claude.use('downloads').catch(() => null)
+      : Promise.resolve(null);
+  }
+  return dlPromise;
+}
+getDownloads();
+async function saveFile(name, blob){
+  const d = await getDownloads();
+  if (d){
+    try { await d.save({ filename: name, data: blob }); toast('تم تنزيل الملف.'); }
+    catch(e){ if (!e || e.code !== 'declined') toast('تعذّر تنزيل الملف في هذه الصفحة.'); }
+    return;
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 3000);
+  toast('تم تنزيل الملف.');
+}
+
+/* ---------- Tabs ---------- */
+const tabs = [...document.querySelectorAll('[role=tab]')];
+function selectTab(t){
+  tabs.forEach(x => {
+    const on = x === t;
+    x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1;
+    $('#' + x.getAttribute('aria-controls')).hidden = !on;
+  });
+  if (t.id === 'tab-sign') requestAnimationFrame(sizePad);
+}
+tabs.forEach((t,i) => {
+  t.addEventListener('click', () => selectTab(t));
+  t.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    const dir = e.key === 'ArrowLeft' ? 1 : -1; // RTL
+    const n = tabs[(i + dir + tabs.length) % tabs.length];
+    n.focus(); selectTab(n);
+  });
+});
+
+/* =========================================================
+   Tool 1: Link to QR code
+   ========================================================= */
+qrcode.stringToBytes = s => Array.from(new TextEncoder().encode(s));
+const qrIn = $('#qr-input'), qrCanvas = $('#qr-canvas');
+let qrCurrent = null; // {qr, text, margin, fg, bg, size}
+
+function normalizeLink(raw){
+  const v = raw.trim();
+  if (!v) return { text:'', prefixed:false };
+  if (/^[a-z][a-z0-9+.-]*:/i.test(v)) return { text:v, prefixed:false };
+  if (/^[^\s]+\.[^\s]+$/.test(v)) return { text:'https://' + v, prefixed:true };
+  return { text:v, prefixed:false };
+}
+
+function updateQR(){
+  const hint = $('#qr-hint');
+  const { text, prefixed } = normalizeLink(qrIn.value);
+  hint.classList.remove('err');
+  hint.textContent = prefixed ? 'أُضيفت البادئة https:// إلى الرابط تلقائيًا.' : 'يُقبل رابط أي موقع أو نموذج أو ملف مشترك.';
+  if (!text){ showQR(null); return; }
+  let qr;
+  try {
+    qr = qrcode(0, $('#qr-ecl').value);
+    qr.addData(text, 'Byte'); qr.make();
+  } catch(e){
+    hint.classList.add('err');
+    hint.textContent = 'الرابط أطول من السعة القصوى للباركود. يُرجى اختصار الرابط أو خفض مستوى مقاومة التلف.';
+    showQR(null); return;
+  }
+  qrCurrent = {
+    qr, text,
+    margin: $('#qr-margin').checked ? 4 : 0,
+    fg: $('#qr-fg').value, bg: $('#qr-bg').value,
+    size: parseInt($('#qr-size').value, 10)
+  };
+  drawQR(qrCanvas, qrCurrent);
+  showQR(qrCurrent);
+}
+function showQR(state){
+  if (!state) qrCurrent = null;
+  qrCanvas.hidden = !state; $('#qr-empty').hidden = !!state;
+  $('#qr-png').disabled = $('#qr-svg').disabled = !state;
+  $('#qr-encoded').textContent = state ? state.text : '';
+}
+function drawQR(canvas, s){
+  const n = s.qr.getModuleCount(), total = n + s.margin * 2;
+  const cell = Math.max(1, Math.floor(s.size / total));
+  const off = Math.floor((s.size - cell * total) / 2) + s.margin * cell;
+  canvas.width = canvas.height = s.size;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = s.bg; ctx.fillRect(0, 0, s.size, s.size);
+  ctx.fillStyle = s.fg;
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++)
+    if (s.qr.isDark(r, c)) ctx.fillRect(off + c * cell, off + r * cell, cell, cell);
+}
+function qrSVG(s){
+  const n = s.qr.getModuleCount(), total = n + s.margin * 2;
+  let d = '';
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++)
+    if (s.qr.isDark(r, c)) d += `M${c + s.margin} ${r + s.margin}h1v1h-1z`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${total} ${total}" width="${s.size}" height="${s.size}" shape-rendering="crispEdges"><rect width="${total}" height="${total}" fill="${s.bg}"/><path d="${d}" fill="${s.fg}"/></svg>`;
+}
+function qrFileBase(){
+  try { return 'qr-' + new URL(qrCurrent.text).hostname.replace(/^www\./, ''); }
+  catch(e){ return 'qr-code'; }
+}
+let qrTimer;
+qrIn.addEventListener('input', () => { clearTimeout(qrTimer); qrTimer = setTimeout(updateQR, 120); });
+['#qr-size','#qr-ecl','#qr-fg','#qr-bg','#qr-margin'].forEach(id => $(id).addEventListener('input', updateQR));
+$('#qr-png').addEventListener('click', () => {
+  if (!qrCurrent) return;
+  qrCanvas.toBlob(b => saveFile(qrFileBase() + '.png', b), 'image/png');
+});
+$('#qr-svg').addEventListener('click', () => {
+  if (!qrCurrent) return;
+  saveFile(qrFileBase() + '.svg', new Blob([qrSVG(qrCurrent)], { type:'image/svg+xml' }));
+});
+
+/* =========================================================
+   Tool 2: Sign a PDF
+   ========================================================= */
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+let seq = 0;
+let pdfBytes = null, pdfDoc = null, pdfName = '', pageNum = 1, pageCount = 0;
+let renderTask = null, curDisp = { w:1, h:1 };
+const sigs = [];        // {id, url, bytes, w, h}
+let placements = [];    // {id, page, sigId, fx, fy, fw, fh}
+let selectedId = null;
+
+/* ----- Signature pad ----- */
+const pad = $('#pad'), pctx = pad.getContext('2d');
+let penColor = '#1B2A6B', padDirty = false, drawing = false, pts = [];
+const LW = 2.6;
+function sizePad(){
+  const r = pad.getBoundingClientRect();
+  if (!r.width) return;
+  const dpr = window.devicePixelRatio || 1;
+  const w = Math.round(r.width * dpr), h = Math.round(r.height * dpr);
+  if (pad.width === w && pad.height === h) return;
+  pad.width = w; pad.height = h;
+  pctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  pctx.lineCap = 'round'; pctx.lineJoin = 'round';
+  padDirty = false;
+}
+function padPt(e){ const r = pad.getBoundingClientRect(); return { x:e.clientX - r.left, y:e.clientY - r.top }; }
+const mid = (a,b) => ({ x:(a.x + b.x) / 2, y:(a.y + b.y) / 2 });
+pad.addEventListener('pointerdown', e => {
+  sizePad(); drawing = true; pad.setPointerCapture(e.pointerId);
+  const p = padPt(e); pts = [p, p];
+  pctx.fillStyle = penColor; pctx.beginPath(); pctx.arc(p.x, p.y, LW / 2, 0, Math.PI * 2); pctx.fill();
+  padDirty = true;
+});
+pad.addEventListener('pointermove', e => {
+  if (!drawing) return;
+  const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+  for (const ev of (evs.length ? evs : [e])){
+    pts.push(padPt(ev));
+    const [a, b, c] = pts.slice(-3);
+    const m1 = mid(a, b), m2 = mid(b, c);
+    pctx.strokeStyle = penColor; pctx.lineWidth = LW;
+    pctx.beginPath(); pctx.moveTo(m1.x, m1.y); pctx.quadraticCurveTo(b.x, b.y, m2.x, m2.y); pctx.stroke();
+  }
+});
+['pointerup','pointercancel','pointerleave'].forEach(t => pad.addEventListener(t, () => { drawing = false; }));
+window.addEventListener('resize', () => { if (!padDirty) sizePad(); });
+
+document.querySelectorAll('.swatch').forEach(s => s.addEventListener('click', () => {
+  penColor = s.dataset.color;
+  document.querySelectorAll('.swatch').forEach(x => x.setAttribute('aria-pressed', x === s));
+}));
+$('#pad-clear').addEventListener('click', () => { pctx.clearRect(0, 0, pad.width, pad.height); padDirty = false; });
+
+function trimCanvas(src){
+  const w = src.width, h = src.height;
+  const data = src.getContext('2d').getImageData(0, 0, w, h).data;
+  let minX = w, minY = h, maxX = -1, maxY = -1;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++){
+    if (data[(y * w + x) * 4 + 3] > 10){
+      if (x < minX) minX = x; if (x > maxX) maxX = x;
+      if (y < minY) minY = y; if (y > maxY) maxY = y;
+    }
+  }
+  if (maxX < 0) return null;
+  const p = 6;
+  minX = Math.max(0, minX - p); minY = Math.max(0, minY - p);
+  maxX = Math.min(w - 1, maxX + p); maxY = Math.min(h - 1, maxY + p);
+  const out = document.createElement('canvas');
+  out.width = maxX - minX + 1; out.height = maxY - minY + 1;
+  out.getContext('2d').drawImage(src, minX, minY, out.width, out.height, 0, 0, out.width, out.height);
+  return out;
+}
+
+$('#pad-save').addEventListener('click', () => {
+  const c = padDirty ? trimCanvas(pad) : null;
+  if (!c){ toast('يُرجى رسم التوقيع أولًا.'); return; }
+  addSig(c);
+  pctx.clearRect(0, 0, pad.width, pad.height); padDirty = false;
+});
+
+/* ----- Mode switch ----- */
+function setMode(draw){
+  $('#mode-draw').setAttribute('aria-pressed', draw);
+  $('#mode-upload').setAttribute('aria-pressed', !draw);
+  $('#draw-pane').hidden = !draw; $('#upload-pane').hidden = draw;
+  if (draw) requestAnimationFrame(sizePad);
+}
+$('#mode-draw').addEventListener('click', () => setMode(true));
+$('#mode-upload').addEventListener('click', () => setMode(false));
+
+/* ----- Upload signature image ----- */
+$('#sig-file').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value = '';
+  if (!f) return;
+  try {
+    const img = await loadImage(f);
+    const max = 1200, k = Math.min(1, max / Math.max(img.width, img.height));
+    const c = document.createElement('canvas');
+    c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+    const ctx = c.getContext('2d');
+    ctx.drawImage(img, 0, 0, c.width, c.height);
+    if ($('#sig-clean').checked){
+      const id = ctx.getImageData(0, 0, c.width, c.height), d = id.data;
+      for (let i = 0; i < d.length; i += 4){
+        const lum = d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114;
+        if (lum > 215) d[i + 3] = 0;
+        else if (lum > 160) d[i + 3] = Math.round(d[i + 3] * (215 - lum) / 55);
+      }
+      ctx.putImageData(id, 0, 0);
+    }
+    const t = trimCanvas(c);
+    if (!t){ toast('لم يُعثر على توقيع واضح في الصورة.'); return; }
+    addSig(t);
+  } catch(err){ toast('تعذّرت قراءة الصورة. يُرجى اختيار ملف PNG أو JPG.'); }
+});
+function loadImage(file){
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => { URL.revokeObjectURL(url); res(img); };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(); };
+    img.src = url;
+  });
+}
+
+/* ----- Saved signatures (this device only) ----- */
+const STORE_KEY = 'furqan-signatures-v1';
+const MAX_SAVED = 8;
+function dataUrlToBytes(u){
+  const bin = atob(u.slice(u.indexOf(',') + 1));
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+function persistSigs(){
+  try {
+    const keep = sigs.filter(s => s.saved).slice(-MAX_SAVED).map(s => ({ url:s.url, w:s.w, h:s.h }));
+    localStorage.setItem(STORE_KEY, JSON.stringify(keep));
+    return true;
+  } catch(e){ return false; }
+}
+function loadSavedSigs(){
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); } catch(e){ list = []; }
+  if (!Array.isArray(list)) return;
+  list.forEach(o => {
+    if (!o || typeof o.url !== 'string' || !o.url.startsWith('data:image/png;base64,')) return;
+    try { sigs.push({ id:'s' + (++seq), url:o.url, bytes:dataUrlToBytes(o.url), w:o.w, h:o.h, saved:true }); } catch(e){}
+  });
+  renderSigList();
+}
+function deleteSig(id){
+  const s = sigs.find(x => x.id === id);
+  if (!s) return;
+  sigs.splice(sigs.indexOf(s), 1);
+  const before = placements.length;
+  placements = placements.filter(p => p.sigId !== id);
+  if (selectedId && !placements.some(p => p.id === selectedId)) selectedId = null;
+  if (s.saved) persistSigs();
+  renderSigList(); renderOverlays(); updateState();
+  toast(before !== placements.length ? 'حُذف التوقيع وأُزيل من صفحات الملف.' : 'حُذف التوقيع.');
+}
+
+/* ----- Signature list ----- */
+async function addSig(canvas){
+  const url = canvas.toDataURL('image/png');
+  const s = { id:'s' + (++seq), url, bytes:dataUrlToBytes(url), w:canvas.width, h:canvas.height, saved:false };
+  sigs.push(s);
+  if ($('#sig-remember').checked){
+    s.saved = true;
+    const savedCount = sigs.filter(x => x.saved).length;
+    if (savedCount > MAX_SAVED){
+      const oldest = sigs.find(x => x.saved);
+      oldest.saved = false;
+    }
+    if (!persistSigs()){ s.saved = false; toast('تعذّر حفظ التوقيع على هذا الجهاز، لكنه متاح حتى إغلاق الصفحة.'); }
+  }
+  renderSigList();
+  if (pdfDoc){ placeSig(s); toast('أُضيف التوقيع إلى الصفحة الحالية.'); }
+  else toast('اعتُمد التوقيع، ويمكن إضافته بعد اختيار ملف PDF.');
+}
+function renderSigList(){
+  const list = $('#sig-list'); list.innerHTML = '';
+  $('#sig-saved').hidden = !sigs.length;
+  sigs.forEach((s, i) => {
+    const cell = document.createElement('div'); cell.className = 'sig-cell';
+    const b = document.createElement('button');
+    b.className = 'sig-item'; b.type = 'button';
+    b.setAttribute('aria-label', 'إضافة التوقيع ' + (i + 1) + ' إلى الصفحة الحالية');
+    b.title = s.saved ? 'محفوظ على هذا الجهاز' : 'غير محفوظ، يُحذف عند إغلاق الصفحة';
+    const im = document.createElement('img'); im.src = s.url; im.alt = '';
+    b.appendChild(im);
+    b.addEventListener('click', () => {
+      if (!pdfDoc){ toast('يُرجى اختيار ملف PDF أولًا.'); return; }
+      placeSig(s);
+    });
+    const del = document.createElement('button');
+    del.className = 'sig-del'; del.type = 'button';
+    del.setAttribute('aria-label', 'حذف التوقيع ' + (i + 1));
+    del.innerHTML = '<svg aria-hidden="true"><use href="#i-x"/></svg>';
+    del.addEventListener('click', () => deleteSig(s.id));
+    cell.append(b, del);
+    list.appendChild(cell);
+  });
+}
+
+/* ----- Load PDF ----- */
+$('#pdf-pick').addEventListener('click', () => $('#pdf-input').click());
+$('#drop-pick').addEventListener('click', () => $('#pdf-input').click());
+$('#pdf-input').addEventListener('change', e => { const f = e.target.files[0]; e.target.value = ''; if (f) openPdf(f); });
+const drop = $('#drop');
+['dragenter','dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave','drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => {
+  const f = [...(e.dataTransfer.files || [])].find(x => x.type === 'application/pdf' || /\.pdf$/i.test(x.name));
+  if (f) openPdf(f); else toast('يُرجى إفلات ملف بصيغة PDF.');
+});
+
+async function openPdf(file){
+  try {
+    const buf = new Uint8Array(await file.arrayBuffer());
+    const doc = await pdfjsLib.getDocument({ data: buf.slice() }).promise;
+    if (pdfDoc) pdfDoc.destroy();
+    pdfBytes = buf; pdfDoc = doc; pdfName = file.name;
+    pageCount = doc.numPages; pageNum = 1;
+    placements = []; selectedId = null; pageFonts = {}; fontTouched = false; setPlacing(false);
+    $('#pdf-name').hidden = false; $('#pdf-name').textContent = file.name;
+    drop.hidden = true; $('#page-wrap').hidden = false;
+    await renderPage();
+    updateState();
+  } catch(err){
+    if (err && err.name === 'PasswordException') toast('الملف محمي بكلمة مرور، ولا يمكن فتحه.');
+    else toast('تعذّر فتح الملف. يُرجى التأكد من أنه ملف PDF سليم.');
+  }
+}
+
+async function renderPage(){
+  if (!pdfDoc) return;
+  const num = pageNum;
+  const page = await pdfDoc.getPage(num);
+  const stage = $('#stage');
+  const avail = stage.clientWidth - parseFloat(getComputedStyle(stage).paddingLeft) * 2;
+  const base = page.getViewport({ scale:1 });
+  const scale = clamp(avail / base.width, 0.2, 2);
+  const vp = page.getViewport({ scale });
+  const dpr = window.devicePixelRatio || 1;
+  const canvas = $('#pdf-canvas');
+  if (renderTask){ try { renderTask.cancel(); } catch(e){} }
+  canvas.width = Math.floor(vp.width * dpr); canvas.height = Math.floor(vp.height * dpr);
+  canvas.style.width = vp.width + 'px'; canvas.style.height = vp.height + 'px';
+  const wrap = $('#page-wrap');
+  wrap.style.width = vp.width + 'px'; wrap.style.height = vp.height + 'px';
+  curDisp = { w:vp.width, h:vp.height };
+  curScale = vp.width / base.width;
+  renderOverlays();
+  const task = page.render({
+    canvasContext: canvas.getContext('2d'), viewport: vp,
+    transform: dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : null
+  });
+  renderTask = task;
+  let ok = true;
+  try { await task.promise; } catch(e){ ok = false; }
+  if (renderTask === task) renderTask = null;
+  if (ok && num === pageNum){
+    const info = await detectFont(page, num);
+    if (num === pageNum) applyDetected(info);
+  }
+}
+let lastStageW = 0, rTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(rTimer);
+  rTimer = setTimeout(() => {
+    const w = $('#stage').clientWidth;
+    if (pdfDoc && w !== lastStageW){ lastStageW = w; renderPage(); }
+  }, 150);
+});
+
+function goPage(n){
+  if (!pdfDoc || n < 1 || n > pageCount) return;
+  pageNum = n; selectedId = null; setPlacing(false);
+  renderPage(); updateState();
+}
+$('#pg-prev').addEventListener('click', () => goPage(pageNum - 1));
+$('#pg-next').addEventListener('click', () => goPage(pageNum + 1));
+
+/* =========================================================
+   Font detection
+   ========================================================= */
+const WEB_FONTS = ['Noto Naskh Arabic','Amiri','Noto Sans Arabic','Cairo','Tajawal','Noto Kufi Arabic','IBM Plex Sans Arabic'];
+const SYS_FONTS = ['Arial','Times New Roman','Traditional Arabic','Simplified Arabic','Sakkal Majalla','Tahoma','Calibri','Segoe UI','Dubai','Geeza Pro','Al Nile','Baghdad','Damascus'];
+let pageFonts = {};
+let fontTouched = false;
+let curScale = 1;
+const textDefaults = { font:'Noto Naskh Arabic', sizePt:12, bold:false, color:'#000000' };
+
+function fontAvailable(name){
+  const ctx = document.createElement('canvas').getContext('2d');
+  const sample = 'أبجد هوز حطي كلمن abcdefXYZ 0123';
+  for (const base of ['monospace','serif','sans-serif']){
+    ctx.font = '40px ' + base; const w0 = ctx.measureText(sample).width;
+    ctx.font = `40px "${name}", ${base}`;
+    if (ctx.measureText(sample).width !== w0) return true;
+  }
+  return false;
+}
+const localFonts = SYS_FONTS.filter(fontAvailable);
+
+function cleanFontName(raw){
+  let n = String(raw || '').replace(/^[A-Z]{6}\+/, '');
+  n = n.replace(/[,\-](Bold|Italic|BoldItalic|Regular|Roman|Black|Light|Medium|SemiBold|Semibold|Oblique|Heavy|Book).*$/i, '');
+  n = n.replace(/PSMT$/, '').replace(/MT$/, '').replace(/PS$/, '');
+  n = n.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[_]+/g, ' ').replace(/\s+/g, ' ').trim();
+  return n;
+}
+function mapFallback(name){
+  const s = name.toLowerCase();
+  if (/kufi/.test(s)) return 'Noto Kufi Arabic';
+  if (/cairo/.test(s)) return 'Cairo';
+  if (/amiri|lotus|badr|majalla|mudir|thuluth|diwani/.test(s)) return 'Amiri';
+  if (/tajawal|almarai|dubai|frutiger|ge ?ss|din|helvetica neue arabic|neo sans|bahij|hacen/.test(s)) return 'Tajawal';
+  if (/arial|tahoma|segoe|calibri|verdana|helvetica|sans|geeza|plex/.test(s)) return 'Noto Sans Arabic';
+  return 'Noto Naskh Arabic';
+}
+function resolveFont(name){
+  if (!name) return null;
+  const web = WEB_FONTS.find(f => f.toLowerCase() === name.toLowerCase());
+  if (web) return { family:web, exact:true };
+  if (fontAvailable(name)) return { family:name, exact:true };
+  return { family:mapFallback(name), exact:false };
+}
+
+async function detectFont(page, num){
+  if (pageFonts[num] !== undefined) return pageFonts[num];
+  let info = null;
+  try {
+    const tc = await page.getTextContent();
+    const tally = new Map();
+    for (const it of tc.items){
+      const s = (it.str || '').trim();
+      if (!s || !it.transform) continue;
+      const t = it.transform;
+      const size = Math.hypot(t[2], t[3]) || Math.hypot(t[0], t[1]);
+      if (!size) continue;
+      const key = it.fontName + '|' + (Math.round(size * 2) / 2);
+      tally.set(key, (tally.get(key) || 0) + s.length);
+    }
+    let best = null, bc = 0;
+    tally.forEach((v, k) => { if (v > bc){ bc = v; best = k; } });
+    if (best){
+      const cut = best.lastIndexOf('|');
+      const fn = best.slice(0, cut), size = parseFloat(best.slice(cut + 1));
+      let raw = '', bold = false;
+      try {
+        if (page.commonObjs.has(fn)){
+          const f = page.commonObjs.get(fn);
+          raw = (f && f.name) || ''; bold = !!(f && (f.bold || f.black));
+        }
+      } catch(e){}
+      const name = cleanFontName(raw);
+      info = { name, raw, sizePt:size, bold: bold || /bold|black|heavy/i.test(raw), resolved: resolveFont(name) };
+    }
+  } catch(e){ info = null; }
+  pageFonts[num] = info;
+  return info;
+}
+
+function buildFontSelect(fileOpt){
+  const sel = $('#tx-font'), cur = sel.value;
+  sel.innerHTML = '';
+  if (fileOpt){
+    const g = document.createElement('optgroup'); g.label = 'خط الملف';
+    const o = document.createElement('option'); o.value = fileOpt.value; o.textContent = fileOpt.label;
+    g.appendChild(o); sel.appendChild(g);
+  }
+  const g1 = document.createElement('optgroup'); g1.label = 'خطوط عربية عامة';
+  WEB_FONTS.forEach(f => { const o = document.createElement('option'); o.value = f; o.textContent = f; o.style.fontFamily = `"${f}"`; g1.appendChild(o); });
+  sel.appendChild(g1);
+  if (localFonts.length){
+    const g2 = document.createElement('optgroup'); g2.label = 'خطوط هذا الجهاز';
+    localFonts.forEach(f => { const o = document.createElement('option'); o.value = f; o.textContent = f; g2.appendChild(o); });
+    sel.appendChild(g2);
+  }
+  if (cur) ensureFontOption(cur, true);
+}
+function ensureFontOption(f, keepValue){
+  const sel = $('#tx-font');
+  if (![...sel.options].some(o => o.value === f)){
+    const o = document.createElement('option'); o.value = f; o.textContent = f;
+    sel.appendChild(o);
+  }
+  if (keepValue) sel.value = f;
+}
+
+function applyDetected(info){
+  const hint = $('#font-hint');
+  if (!info){
+    buildFontSelect(null);
+    hint.textContent = 'لا تحتوي هذه الصفحة على نص قابل للقراءة، وقد تكون ممسوحة ضوئيًا، لذا يُختار الخط والمقاس يدويًا.';
+    if (!fontTouched) syncDefaultsToControls();
+    return;
+  }
+  const size = Math.round(info.sizePt * 2) / 2;
+  let fileOpt = null;
+  if (info.resolved){
+    const r = info.resolved;
+    fileOpt = { value:r.family, label: r.exact ? `${info.name} (خط الملف)` : `${r.family} (الأقرب إلى ${info.name})` };
+    hint.textContent = r.exact
+      ? `الخط المستخدم في هذه الصفحة: ${info.name} بمقاس ${size}، وقد اعتُمد للكتابة.`
+      : `الخط المستخدم في هذه الصفحة: ${info.name} بمقاس ${size}، وهو غير متوفر على هذا الجهاز، لذا اعتُمد أقرب خط له.`;
+  } else {
+    hint.textContent = `تعذّر التعرف على اسم خط هذه الصفحة، واعتُمد مقاسها المستخدم (${size}).`;
+  }
+  buildFontSelect(fileOpt);
+  if (!fontTouched){
+    if (fileOpt) textDefaults.font = fileOpt.value;
+    textDefaults.sizePt = size;
+    textDefaults.bold = info.bold;
+    if (!selText()) syncDefaultsToControls();
+  }
+  const p = selText();
+  if (p) syncControls(p);
+}
+
+/* =========================================================
+   Placements (signatures and text)
+   ========================================================= */
+function sizeFor(s, pageAspect, fw){
+  const ar = s.h / s.w;
+  let w = fw, h = w * ar * pageAspect;
+  if (h > 0.25){ h = 0.25; w = h / (ar * pageAspect); }
+  return { fw:w, fh:h };
+}
+function placeSig(s){
+  setPlacing(false);
+  const { fw, fh } = sizeFor(s, curDisp.w / curDisp.h, 0.28);
+  const p = { id:'p' + (++seq), type:'sig', page:pageNum, sigId:s.id, fx:(1 - fw) / 2, fy:Math.min(0.75, 1 - fh - 0.04), fw, fh };
+  placements.push(p); selectedId = p.id;
+  renderOverlays(); updateState();
+  const el = elFor(p.id);
+  if (el){ el.focus({ preventScroll:true }); el.scrollIntoView({ block:'nearest', behavior:'smooth' }); }
+}
+const elFor = id => $('#overlay').querySelector(`[data-id="${id}"]`);
+const selText = () => placements.find(p => p.id === selectedId && p.type === 'text') || null;
+const hasContent = p => p.type === 'sig' || (p.type === 'text' && p.text.trim() !== '');
+
+function posEl(el, p){
+  el.style.left = (p.fx * 100) + '%'; el.style.top = (p.fy * 100) + '%';
+  el.style.width = (p.fw * 100) + '%'; el.style.height = (p.fh * 100) + '%';
+}
+function select(id){
+  selectedId = id;
+  $('#overlay').querySelectorAll('.placed').forEach(x => x.classList.toggle('sel', x.dataset.id === id));
+  const p = selText();
+  if (p) syncControls(p);
+  updateState();
+}
+function removePlacement(id){
+  placements = placements.filter(p => p.id !== id);
+  if (selectedId === id) selectedId = null;
+  renderOverlays(); updateState();
+}
+
+function textDir(s){
+  const m = String(s).match(/[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]|[A-Za-z\u00C0-\u024F]/);
+  if (!m) return null;
+  return /[A-Za-z\u00C0-\u024F]/.test(m[0]) ? 'l' : 'r';
+}
+function fontStack(f){ return `"${f}", "Noto Naskh Arabic", "Amiri", serif`; }
+function styleText(el, p){
+  const tx = el.querySelector('.tx');
+  tx.style.fontFamily = fontStack(p.font);
+  tx.style.fontSize = (p.sizePt * curScale) + 'px';
+  tx.style.fontWeight = p.bold ? '700' : '400';
+  tx.style.color = p.color;
+  el.dataset.anchor = p.anchor;
+  if (p.anchor === 'r'){ el.style.right = ((1 - p.ex) * 100) + '%'; el.style.left = 'auto'; }
+  else { el.style.left = (p.ex * 100) + '%'; el.style.right = 'auto'; }
+  el.style.top = (p.fy * 100) + '%';
+}
+function measureText(el, p){
+  const ov = $('#overlay');
+  if (!ov.clientWidth) return;
+  p.fw = el.offsetWidth / ov.clientWidth; p.fh = el.offsetHeight / ov.clientHeight;
+}
+function remeasureAll(){
+  placements.filter(p => p.type === 'text' && p.page === pageNum).forEach(p => { const el = elFor(p.id); if (el) measureText(el, p); });
+}
+if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', remeasureAll);
+
+function makeSigEl(p){
+  const ov = $('#overlay');
+  const s = sigs.find(x => x.id === p.sigId);
+  const el = document.createElement('div');
+  el.className = 'placed' + (p.id === selectedId ? ' sel' : '');
+  el.dataset.id = p.id; el.tabIndex = 0; el.setAttribute('role', 'button');
+  el.setAttribute('aria-label', 'توقيع مُدرج، يُحرَّك بالسحب أو بالأسهم، ويُحذف بمفتاح الحذف');
+  posEl(el, p);
+  el.innerHTML = `<img alt="" src="${s.url}"><span class="handle" aria-hidden="true"></span><button class="del" type="button" aria-label="حذف التوقيع"><svg><use href="#i-x"/></svg></button>`;
+  el.querySelector('.del').addEventListener('click', ev => { ev.stopPropagation(); removePlacement(p.id); });
+  el.addEventListener('pointerdown', e => {
+    if (e.target.closest('.del')) return;
+    e.preventDefault(); e.stopPropagation();
+    select(p.id); el.focus({ preventScroll:true });
+    const resizing = !!e.target.closest('.handle');
+    const rect = ov.getBoundingClientRect();
+    const st = { x:e.clientX, y:e.clientY, fx:p.fx, fy:p.fy, fw:p.fw, fh:p.fh };
+    el.setPointerCapture(e.pointerId);
+    const move = ev => {
+      const dx = (ev.clientX - st.x) / rect.width, dy = (ev.clientY - st.y) / rect.height;
+      if (resizing){
+        const ratio = st.fh / st.fw;
+        let fw = clamp(st.fw + dx, 0.04, 1 - p.fx), fh = fw * ratio;
+        if (p.fy + fh > 1){ fh = 1 - p.fy; fw = fh / ratio; }
+        p.fw = fw; p.fh = fh;
+      } else {
+        p.fx = clamp(st.fx + dx, 0, 1 - p.fw);
+        p.fy = clamp(st.fy + dy, 0, 1 - p.fh);
+      }
+      posEl(el, p);
+    };
+    const up = () => {
+      el.removeEventListener('pointermove', move);
+      el.removeEventListener('pointerup', up);
+      el.removeEventListener('pointercancel', up);
+    };
+    el.addEventListener('pointermove', move);
+    el.addEventListener('pointerup', up);
+    el.addEventListener('pointercancel', up);
+  });
+  el.addEventListener('keydown', e => {
+    const step = e.shiftKey ? 0.02 : 0.004;
+    if (e.key === 'Delete' || e.key === 'Backspace'){ e.preventDefault(); removePlacement(p.id); return; }
+    const moves = { ArrowLeft:[-step,0], ArrowRight:[step,0], ArrowUp:[0,-step], ArrowDown:[0,step] };
+    if (!moves[e.key]) return;
+    e.preventDefault();
+    p.fx = clamp(p.fx + moves[e.key][0], 0, 1 - p.fw);
+    p.fy = clamp(p.fy + moves[e.key][1], 0, 1 - p.fh);
+    posEl(el, p); select(p.id);
+  });
+  el.addEventListener('focus', () => select(p.id));
+  return el;
+}
+
+function makeTextEl(p){
+  const ov = $('#overlay');
+  const el = document.createElement('div');
+  el.className = 'placed text-box' + (p.id === selectedId ? ' sel' : '');
+  el.dataset.id = p.id;
+  el.innerHTML = `<div class="tx" data-ph="اكتب هنا" spellcheck="false" role="textbox" aria-multiline="true" aria-label="نص مُضاف إلى الصفحة"></div>`
+    + `<span class="mv" aria-hidden="true" title="سحب النص"><svg><use href="#i-move"/></svg></span>`
+    + `<span class="handle" aria-hidden="true" title="تغيير المقاس"></span>`
+    + `<button class="del" type="button" aria-label="حذف النص"><svg><use href="#i-x"/></svg></button>`;
+  const tx = el.querySelector('.tx');
+  tx.textContent = p.text;
+  tx.contentEditable = 'plaintext-only';
+  if (tx.contentEditable !== 'plaintext-only') tx.contentEditable = 'true';
+  styleText(el, p);
+
+  tx.addEventListener('pointerdown', e => { e.stopPropagation(); if (selectedId !== p.id) select(p.id); });
+  tx.addEventListener('focus', () => { if (selectedId !== p.id) select(p.id); });
+  tx.addEventListener('paste', e => {
+    e.preventDefault();
+    const t = (e.clipboardData || window.clipboardData).getData('text/plain');
+    document.execCommand('insertText', false, t);
+  });
+  tx.addEventListener('input', () => {
+    p.text = tx.innerText.replace(/\n$/, '');
+    const d = textDir(p.text);
+    if (d && d !== p.anchor){ p.anchor = d; styleText(el, p); }
+    measureText(el, p); updateState();
+  });
+  tx.addEventListener('keydown', e => {
+    if (e.key === 'Escape'){ tx.blur(); select(null); }
+  });
+  el.querySelector('.del').addEventListener('pointerdown', e => e.stopPropagation());
+  el.querySelector('.del').addEventListener('click', ev => { ev.stopPropagation(); removePlacement(p.id); });
+
+  const drag = (e, mode) => {
+    e.preventDefault(); e.stopPropagation();
+    select(p.id);
+    const rect = ov.getBoundingClientRect();
+    const st = { x:e.clientX, y:e.clientY, ex:p.ex, fy:p.fy, size:p.sizePt, w:el.offsetWidth || 1 };
+    const target = e.currentTarget;
+    target.setPointerCapture(e.pointerId);
+    const move = ev => {
+      const dxp = ev.clientX - st.x, dyp = ev.clientY - st.y;
+      if (mode === 'move'){
+        p.ex = clamp(st.ex + dxp / rect.width, 0, 1);
+        p.fy = clamp(st.fy + dyp / rect.height, 0, 1 - p.fh);
+      } else {
+        const grow = p.anchor === 'r' ? -dxp : dxp;
+        p.sizePt = clamp(Math.round(st.size * (1 + grow / st.w) * 2) / 2, 4, 120);
+        if (selectedId === p.id) $('#tx-size').value = p.sizePt;
+      }
+      styleText(el, p); measureText(el, p);
+    };
+    const up = () => {
+      target.removeEventListener('pointermove', move);
+      target.removeEventListener('pointerup', up);
+      target.removeEventListener('pointercancel', up);
+    };
+    target.addEventListener('pointermove', move);
+    target.addEventListener('pointerup', up);
+    target.addEventListener('pointercancel', up);
+  };
+  el.querySelector('.mv').addEventListener('pointerdown', e => drag(e, 'move'));
+  el.querySelector('.handle').addEventListener('pointerdown', e => drag(e, 'size'));
+  el.addEventListener('pointerdown', e => { e.stopPropagation(); });
+  return el;
+}
+
+function renderOverlays(){
+  const ov = $('#overlay'); ov.innerHTML = '';
+  placements.filter(p => p.page === pageNum).forEach(p => {
+    ov.appendChild(p.type === 'text' ? makeTextEl(p) : makeSigEl(p));
+  });
+  requestAnimationFrame(remeasureAll);
+}
+
+/* ----- Text tool ----- */
+let placingText = false;
+function setPlacing(on){
+  placingText = !!on && !!pdfDoc;
+  $('#add-text').setAttribute('aria-pressed', placingText);
+  $('#overlay').classList.toggle('placing', placingText);
+  $('#text-hint').textContent = placingText
+    ? 'يُنقر الآن على موضع الكتابة في الصفحة.'
+    : 'يُضغط الزر ثم يُنقر على موضع الكتابة في الصفحة.';
+}
+$('#add-text').addEventListener('click', () => setPlacing(!placingText));
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && placingText) setPlacing(false); });
+
+$('#overlay').addEventListener('pointerdown', e => {
+  if (e.target.id !== 'overlay') return;
+  if (!placingText){ select(null); return; }
+  e.preventDefault();
+  const ov = $('#overlay'), r = ov.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+  const d = textDefaults;
+  const lineH = d.sizePt * curScale * 1.4 / r.height;
+  const p = {
+    id:'p' + (++seq), type:'text', page:pageNum, anchor:'r',
+    ex:x, fy:clamp(y - lineH / 2, 0, 1 - lineH), fw:0, fh:lineH,
+    text:'', font:d.font, sizePt:d.sizePt, bold:d.bold, color:d.color
+  };
+  placements.push(p); selectedId = p.id;
+  setPlacing(false);
+  renderOverlays(); updateState();
+  const el = elFor(p.id);
+  if (el) setTimeout(() => el.querySelector('.tx').focus(), 0);
+});
+
+function syncControls(p){
+  ensureFontOption(p.font, false);
+  $('#tx-font').value = p.font;
+  $('#tx-size').value = p.sizePt;
+  $('#tx-color').value = p.color;
+  $('#tx-bold').setAttribute('aria-pressed', p.bold);
+}
+function syncDefaultsToControls(){
+  ensureFontOption(textDefaults.font, false);
+  $('#tx-font').value = textDefaults.font;
+  $('#tx-size').value = textDefaults.sizePt;
+  $('#tx-color').value = textDefaults.color;
+  $('#tx-bold').setAttribute('aria-pressed', textDefaults.bold);
+}
+function onTextControl(){
+  fontTouched = true;
+  const vals = {
+    font: $('#tx-font').value,
+    sizePt: clamp(parseFloat($('#tx-size').value) || 12, 4, 120),
+    color: $('#tx-color').value,
+    bold: $('#tx-bold').getAttribute('aria-pressed') === 'true'
+  };
+  Object.assign(textDefaults, vals);
+  const p = selText();
+  if (p){
+    Object.assign(p, vals);
+    const el = elFor(p.id);
+    if (el){
+      styleText(el, p); measureText(el, p);
+      if (document.fonts) document.fonts.load(`${p.bold ? 700 : 400} 20px "${p.font}"`, p.text || 'أ').then(() => measureText(el, p)).catch(() => {});
+    }
+  }
+}
+['#tx-font','#tx-size','#tx-color'].forEach(id => $(id).addEventListener('input', onTextControl));
+$('#tx-bold').addEventListener('click', () => {
+  const b = $('#tx-bold');
+  b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') !== 'true');
+  onTextControl();
+});
+
+/* ----- Copy signature to all pages ----- */
+$('#dup-all').addEventListener('click', async () => {
+  const src = placements.find(p => p.id === selectedId && p.type === 'sig');
+  if (!src || pageCount < 2) return;
+  const s = sigs.find(x => x.id === src.sigId);
+  const srcAspect = curDisp.w / curDisp.h;
+  for (let i = 1; i <= pageCount; i++){
+    if (i === src.page) continue;
+    const pg = await pdfDoc.getPage(i);
+    const v = pg.getViewport({ scale:1 });
+    const aspect = v.width / v.height;
+    let fw = src.fw, fh = src.fw * (s.h / s.w) * aspect;
+    if (Math.abs(aspect - srcAspect) < 0.01) fh = src.fh;
+    if (fh > 0.9){ fh = 0.9; fw = fh / ((s.h / s.w) * aspect); }
+    placements.push({
+      id:'p' + (++seq), type:'sig', page:i, sigId:src.sigId, fw, fh,
+      fx:clamp(src.fx, 0, 1 - fw), fy:clamp(src.fy, 0, 1 - fh)
+    });
+  }
+  updateState();
+  toast('نُسخ التوقيع إلى جميع الصفحات (' + pageCount + ' صفحة).');
+});
+
+function updateState(){
+  $('#pg-num').textContent = pdfDoc ? `صفحة ${pageNum} من ${pageCount}` : 'لا يوجد ملف';
+  $('#pg-prev').disabled = !pdfDoc || pageNum <= 1;
+  $('#pg-next').disabled = !pdfDoc || pageNum >= pageCount;
+  $('#add-text').disabled = !pdfDoc;
+  const real = placements.filter(hasContent);
+  $('#pdf-save').disabled = !pdfDoc || !real.length;
+  const sel = placements.find(p => p.id === selectedId);
+  $('#dup-all').disabled = !sel || sel.type !== 'sig' || pageCount < 2;
+  const sigN = real.filter(p => p.type === 'sig').length, txtN = real.length - sigN;
+  const pages = new Set(real.map(p => p.page)).size;
+  $('#place-count').textContent = !real.length ? 'لم يُضف أي توقيع أو نص بعد.'
+    : `التواقيع: ${sigN}، والنصوص: ${txtN}، في ${pages} ${pages === 1 ? 'صفحة' : 'صفحات'}.`;
+}
+
+/* ----- Save PDF ----- */
+function pageGeom(page){
+  const box = page.getCropBox();
+  const W = box.width, H = box.height;
+  const rot = ((page.getRotation().angle % 360) + 360) % 360;
+  const side = rot === 90 || rot === 270;
+  return { box, W, H, rot, dW: side ? H : W, dH: side ? W : H };
+}
+function placeImage(page, g, img, x0, y0, w, h){
+  let x, y;
+  if (g.rot === 90){ x = y0 + h; y = x0; }
+  else if (g.rot === 180){ x = g.W - x0; y = y0 + h; }
+  else if (g.rot === 270){ x = g.W - y0 - h; y = g.H - x0; }
+  else { x = x0; y = g.H - y0 - h; }
+  page.drawImage(img, { x:x + g.box.x, y:y + g.box.y, width:w, height:h, rotate:PDFLib.degrees(g.rot) });
+}
+async function renderTextPng(p){
+  const k = 300 / 72, px = p.sizePt * k, weight = p.bold ? 700 : 400;
+  const font = `${weight} ${px}px ${fontStack(p.font)}`;
+  try { if (document.fonts) await document.fonts.load(font, p.text); } catch(e){}
+  const lines = p.text.split('\n'), lh = px * 1.4, pad = Math.ceil(px * 0.2);
+  const c = document.createElement('canvas'), ctx = c.getContext('2d');
+  ctx.font = font;
+  const maxW = Math.max(1, ...lines.map(l => ctx.measureText(l).width));
+  c.width = Math.ceil(maxW) + pad * 2; c.height = Math.ceil(lines.length * lh);
+  ctx.font = font; ctx.fillStyle = p.color; ctx.textBaseline = 'middle';
+  lines.forEach((l, i) => {
+    const rtl = (textDir(l) || p.anchor) === 'r';
+    ctx.direction = rtl ? 'rtl' : 'ltr';
+    ctx.textAlign = rtl ? 'right' : 'left';
+    ctx.fillText(l, rtl ? c.width - pad : pad, i * lh + lh / 2);
+  });
+  const url = c.toDataURL('image/png');
+  return { bytes:dataUrlToBytes(url), w:c.width / k, h:c.height / k, pad:pad / k };
+}
+
+$('#pdf-save').addEventListener('click', async () => {
+  const btn = $('#pdf-save'); btn.disabled = true;
+  const label = btn.lastChild.textContent; btn.lastChild.textContent = 'جارٍ تجهيز الملف...';
+  try {
+    const doc = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption:true });
+    const pages = doc.getPages(), cache = {};
+    for (const p of placements.filter(hasContent)){
+      const page = pages[p.page - 1], g = pageGeom(page);
+      if (p.type === 'sig'){
+        const s = sigs.find(x => x.id === p.sigId);
+        if (!cache[s.id]) cache[s.id] = await doc.embedPng(s.bytes);
+        placeImage(page, g, cache[s.id], p.fx * g.dW, p.fy * g.dH, p.fw * g.dW, p.fh * g.dH);
+      } else {
+        const t = await renderTextPng(p);
+        const img = await doc.embedPng(t.bytes);
+        const edge = p.ex * g.dW;
+        const x0 = p.anchor === 'r' ? edge - t.w + t.pad : edge - t.pad;
+        placeImage(page, g, img, x0, p.fy * g.dH, t.w, t.h);
+      }
+    }
+    const out = await doc.save();
+    const signed = placements.some(p => p.type === 'sig');
+    const name = pdfName.replace(/\.pdf$/i, '') + (signed ? '-موقّع.pdf' : '-معدّل.pdf');
+    await saveFile(name, new Blob([out], { type:'application/pdf' }));
+  } catch(err){
+    toast('تعذّر حفظ الملف. قد يكون الملف مشفّرًا أو تالفًا.');
+  } finally {
+    btn.lastChild.textContent = label; updateState();
+  }
+});
+
+buildFontSelect(null);
+syncDefaultsToControls();
+loadSavedSigs();
+updateState();
+})();
+</script>
+</body>
+</html>
