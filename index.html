@@ -398,7 +398,7 @@ main.wrap{padding-bottom:40px}
             <button class="btn" id="drop-pick">أو اختر ملفًا من الجهاز</button>
           </div>
           <div class="page-wrap" id="page-wrap" hidden>
-            <canvas id="pdf-canvas"></canvas>
+            <canvas id="pdf-canvas" dir="ltr"></canvas>
             <div class="overlay" id="overlay"></div>
           </div>
         </div>
@@ -552,7 +552,9 @@ $('#qr-svg').addEventListener('click', () => {
 /* =========================================================
    Tool 2: Sign a PDF
    ========================================================= */
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const PDFJS_ASSETS = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/';
+const PDFJS_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_CDN + 'pdf.worker.min.js';
 
 let seq = 0;
 let pdfBytes = null, pdfDoc = null, pdfName = '', pageNum = 1, pageCount = 0;
@@ -771,7 +773,12 @@ drop.addEventListener('drop', e => {
 async function openPdf(file){
   try {
     const buf = new Uint8Array(await file.arrayBuffer());
-    const doc = await pdfjsLib.getDocument({ data: buf.slice() }).promise;
+    const doc = await pdfjsLib.getDocument({
+      data: buf.slice(),
+      cMapUrl: PDFJS_ASSETS + 'cmaps/',
+      cMapPacked: true,
+      standardFontDataUrl: PDFJS_ASSETS + 'standard_fonts/'
+    }).promise;
     if (pdfDoc) pdfDoc.destroy();
     pdfBytes = buf; pdfDoc = doc; pdfName = file.name;
     pageCount = doc.numPages; pageNum = 1;
@@ -795,7 +802,7 @@ async function renderPage(){
   const base = page.getViewport({ scale:1 });
   const scale = clamp(avail / base.width, 0.2, 2);
   const vp = page.getViewport({ scale });
-  const dpr = window.devicePixelRatio || 1;
+  const dpr = Math.min(3, Math.max(2, window.devicePixelRatio || 1));
   const canvas = $('#pdf-canvas');
   if (renderTask){ try { renderTask.cancel(); } catch(e){} }
   canvas.width = Math.floor(vp.width * dpr); canvas.height = Math.floor(vp.height * dpr);
