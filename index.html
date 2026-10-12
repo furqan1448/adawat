@@ -220,6 +220,30 @@ main.wrap{padding-bottom:40px}
 .text-box[data-anchor="r"] .handle{left:-9px; right:auto; cursor:nesw-resize}
 .text-box[data-anchor="l"] .handle{right:-9px; left:auto}
 
+/* Merge tool */
+.m-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px}
+.m-item{display:flex; align-items:center; gap:12px; padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:var(--surface)}
+.m-item.dragging{opacity:.45}
+.m-item.drop-before{box-shadow:0 -3px 0 var(--brand)}
+.m-item.drop-after{box-shadow:0 3px 0 var(--brand)}
+.m-grip{flex:none; color:var(--muted); cursor:grab; display:grid; place-items:center; width:20px}
+.m-grip svg{width:18px; height:18px}
+.m-ord{flex:none; width:26px; height:26px; border-radius:50%; display:grid; place-items:center; background:var(--brand-soft); color:var(--brand); font-size:.85rem; font-weight:600}
+.m-thumb{flex:none; width:46px; height:60px; border-radius:4px; background:var(--stage); display:grid; place-items:center; overflow:hidden; box-shadow:0 0 0 1px var(--line)}
+.m-thumb canvas,.m-thumb img{max-width:100%; max-height:100%; display:block; background:#FFFFFF}
+.m-info{flex:1; min-width:0}
+.m-info strong{display:block; font-weight:500; font-size:.92rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.m-info small{display:block; color:var(--muted); font-size:.82rem}
+.m-btns{flex:none; display:flex; gap:4px}
+.m-btns .btn{padding:6px; width:34px; height:34px}
+.m-btns .btn.del{color:var(--danger)}
+.m-btns .btn.del:hover:not(:disabled){border-color:var(--danger)}
+.m-summary{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin:0 0 12px}
+.m-summary h3{margin:0; font-size:1rem; font-weight:600}
+.m-empty{border:1px dashed var(--line); border-radius:10px; padding:28px 16px; text-align:center; color:var(--muted)}
+#m-drop{min-height:190px}
+@media (max-width:560px){ .m-thumb{display:none} .m-item{gap:8px; padding:8px 10px} }
+
 @media (max-width:900px){
   .qr-grid,.sign-grid{grid-template-columns:1fr}
   .stage{min-height:380px; padding:12px}
@@ -261,6 +285,10 @@ main.wrap{padding-bottom:40px}
     <symbol id="i-word" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 3.5H7a1.5 1.5 0 0 0-1.5 1.5v14A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V8.5l-5-5z"/><path d="M13.5 3.5v5h5"/><path d="M8.5 11.5l1.25 5 1.75-3.75 1.75 3.75 1.25-5"/></symbol>
     <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11" height="11" rx="1.5"/><path d="M15.5 8.5V6A1.5 1.5 0 0 0 14 4.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/></symbol>
     <symbol id="i-erase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 7h15M9.5 7V5h5v2M6.5 7l1 12.5h9L17.5 7"/></symbol>
+    <symbol id="i-merge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3.5H5A1.5 1.5 0 0 0 3.5 5v9A1.5 1.5 0 0 0 5 15.5h4.5"/><path d="M14.5 8.5H19A1.5 1.5 0 0 1 20.5 10v9a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 8.5 19v-3.5"/><path d="M8 9.5h8m0 0l-2.5-2.5M16 9.5L13.5 12"/></symbol>
+    <symbol id="i-upar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14.5l6-6 6 6"/></symbol>
+    <symbol id="i-dnar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5l6 6 6-6"/></symbol>
+    <symbol id="i-grip" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></symbol>
   </defs>
 </svg>
 
@@ -288,6 +316,11 @@ main.wrap{padding-bottom:40px}
     <a class="tool-card" href="#word">
       <svg class="ic" aria-hidden="true"><use href="#i-word"/></svg>
       <span class="txt"><strong>تحويل ملف PDF إلى Word</strong><small>تحويل الملف إلى مستند Word مع الحفاظ على تنسيقه ومواضع عناصره</small></span>
+      <svg class="go" aria-hidden="true"><use href="#i-next"/></svg>
+    </a>
+    <a class="tool-card" href="#merge">
+      <svg class="ic" aria-hidden="true"><use href="#i-merge"/></svg>
+      <span class="txt"><strong>دمج ملفات PDF في ملف واحد</strong><small>جمع عدة ملفات PDF أو صور في ملف واحد مع ترتيبها حسب الرغبة</small></span>
       <svg class="go" aria-hidden="true"><use href="#i-next"/></svg>
     </a>
   </nav>
@@ -477,6 +510,40 @@ main.wrap{padding-bottom:40px}
       </div>
     </div>
   </section>
+
+  <!-- Merge PDFs -->
+  <section id="panel-merge" hidden>
+    <div class="qr-grid">
+      <div class="card">
+        <div class="drop small-drop" id="m-drop">
+          <svg aria-hidden="true"><use href="#i-merge"/></svg>
+          <div>اسحب ملفات PDF أو الصور وأفلتها هنا</div>
+          <button class="btn" id="m-pick" type="button">أو اختر ملفات من الجهاز</button>
+        </div>
+        <input id="m-input" type="file" accept="application/pdf,.pdf,image/png,image/jpeg" multiple class="sr" tabindex="-1">
+        <p class="hint">يمكن اختيار عدة ملفات دفعة واحدة، وإضافة ملفات أخرى في أي وقت. وتُقبل صور PNG وJPG، وتُوضع كل صورة في صفحة مستقلة.</p>
+
+        <div class="field" style="margin-top:18px">
+          <label for="m-fname">اسم الملف المدمج</label>
+          <input id="m-fname" type="text" value="ملف مدمج" autocomplete="off">
+        </div>
+
+        <button class="btn primary block" id="m-merge" disabled><svg aria-hidden="true"><use href="#i-down"/></svg>دمج وتنزيل الملف</button>
+        <div class="progress" id="m-progress" hidden><div class="bar" id="m-bar"></div></div>
+        <p class="hint" id="m-status" aria-live="polite">يلزم اختيار ملفين على الأقل.</p>
+      </div>
+
+      <div class="card">
+        <div class="m-summary">
+          <h3>ترتيب الملفات</h3>
+          <button class="btn ghost" id="m-clear" type="button" hidden><svg aria-hidden="true"><use href="#i-erase"/></svg>حذف الكل</button>
+        </div>
+        <p class="m-empty" id="m-empty">لم تُضف أي ملفات بعد.</p>
+        <ol class="m-list" id="m-list"></ol>
+        <p class="hint" id="m-order-hint" hidden>تُدمج الملفات بالترتيب الظاهر من الأعلى إلى الأسفل، ويُغيَّر الترتيب بالسهمين أو بسحب الملف من المقبض.</p>
+      </div>
+    </div>
+  </section>
 </main>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -527,7 +594,8 @@ async function saveFile(name, blob){
 const VIEWS = {
   qr:   { panel:'panel-qr',   title:'تحويل الرابط إلى باركود' },
   sign: { panel:'panel-sign', title:'التوقيع والكتابة على ملف PDF' },
-  word: { panel:'panel-word', title:'تحويل ملف PDF إلى Word' }
+  word: { panel:'panel-word', title:'تحويل ملف PDF إلى Word' },
+  merge:{ panel:'panel-merge',title:'دمج ملفات PDF في ملف واحد' }
 };
 function route(){
   const v = VIEWS[location.hash.slice(1)] || null;
@@ -1853,6 +1921,199 @@ $('#w-convert').addEventListener('click', async () => {
     WRD.busy = false; btn.disabled = false;
   }
 });
+
+/* =========================================================
+   Tool 4: Merge PDFs
+   ========================================================= */
+const MRG = { items:[], busy:false, seq:0 };
+const isPdfFile = f => f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
+const isImgFile = f => /^image\/(png|jpeg)$/.test(f.type) || /\.(png|jpe?g)$/i.test(f.name);
+const AR_DIGITS = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+function pagesLabel(n){
+  if (n === 1) return 'صفحة واحدة';
+  if (n === 2) return 'صفحتان';
+  if (n >= 3 && n <= 10) return `${n} صفحات`;
+  return `${n} صفحة`;
+}
+function filesLabel(n){ return n === 2 ? 'ملفين' : n <= 10 ? `${n} ملفات` : `${n} ملفًا`; }
+function fmtSize(b){ return b < 1048576 ? Math.max(1, Math.round(b / 1024)) + ' ك.ب' : (b / 1048576).toFixed(1) + ' م.ب'; }
+
+$('#m-pick').addEventListener('click', () => $('#m-input').click());
+$('#m-input').addEventListener('change', e => { const fs = [...e.target.files]; e.target.value = ''; addMergeFiles(fs); });
+const mDrop = $('#m-drop');
+['dragenter','dragover'].forEach(t => mDrop.addEventListener(t, e => { if (!e.dataTransfer.types.includes('Files')) return; e.preventDefault(); mDrop.classList.add('over'); }));
+['dragleave','drop'].forEach(t => mDrop.addEventListener(t, e => { e.preventDefault(); mDrop.classList.remove('over'); }));
+mDrop.addEventListener('drop', e => addMergeFiles([...(e.dataTransfer.files || [])]));
+
+async function addMergeFiles(files){
+  if (MRG.busy) return;
+  const ok = files.filter(f => isPdfFile(f) || isImgFile(f));
+  if (files.length && ok.length < files.length) toast('تُقبل ملفات PDF وصور PNG وJPG فقط، وتم تجاهل غيرها.');
+  for (const f of ok){
+    const it = { id: ++MRG.seq, file:f, name:f.name, kind: isPdfFile(f) ? 'pdf' : 'img', pages:null, bytes:null, error:null, thumb:null };
+    MRG.items.push(it);
+    renderMergeList();
+    try {
+      it.bytes = new Uint8Array(await f.arrayBuffer());
+      if (it.kind === 'pdf'){
+        const doc = await pdfjsLib.getDocument({
+          data: it.bytes.slice(),
+          cMapUrl: PDFJS_ASSETS + 'cmaps/', cMapPacked: true,
+          standardFontDataUrl: PDFJS_ASSETS + 'standard_fonts/'
+        }).promise;
+        it.pages = doc.numPages;
+        const page = await doc.getPage(1);
+        const vp0 = page.getViewport({ scale:1 });
+        const vp = page.getViewport({ scale: 120 / Math.max(vp0.width, vp0.height) });
+        const c = document.createElement('canvas');
+        c.width = Math.ceil(vp.width); c.height = Math.ceil(vp.height);
+        const ctx = c.getContext('2d'); ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, c.width, c.height);
+        await page.render({ canvasContext:ctx, viewport:vp }).promise;
+        it.thumb = c; doc.destroy();
+      } else {
+        it.pages = 1;
+        const img = new Image(); img.alt = '';
+        img.src = URL.createObjectURL(f);
+        await img.decode();
+        it.thumb = img; it.imgW = img.naturalWidth; it.imgH = img.naturalHeight;
+      }
+    } catch(err){
+      it.error = (err && err.name === 'PasswordException') ? 'الملف محمي بكلمة مرور' : 'تعذّر قراءة الملف';
+    }
+    renderMergeList();
+  }
+}
+
+function moveItem(from, to){
+  if (to < 0 || to >= MRG.items.length || from === to) return;
+  const [it] = MRG.items.splice(from, 1);
+  MRG.items.splice(to, 0, it);
+  renderMergeList();
+}
+
+let dragId = null;
+function renderMergeList(){
+  const list = $('#m-list'); list.innerHTML = '';
+  const n = MRG.items.length;
+  MRG.items.forEach((it, i) => {
+    const li = document.createElement('li');
+    li.className = 'm-item'; li.dataset.id = it.id;
+    const grip = document.createElement('span'); grip.className = 'm-grip'; grip.title = 'اسحب لتغيير الترتيب';
+    grip.innerHTML = '<svg aria-hidden="true"><use href="#i-grip"/></svg>';
+    const ord = document.createElement('span'); ord.className = 'm-ord'; ord.textContent = AR_DIGITS(i + 1);
+    const th = document.createElement('span'); th.className = 'm-thumb';
+    if (it.thumb) th.appendChild(it.thumb);
+    const info = document.createElement('span'); info.className = 'm-info';
+    const nm = document.createElement('strong'); nm.textContent = it.name; nm.title = it.name;
+    const meta = document.createElement('small');
+    if (it.error){ meta.textContent = it.error + '، ولن يُدمج.'; meta.style.color = 'var(--danger)'; }
+    else if (it.pages == null) meta.textContent = 'جارٍ القراءة...';
+    else meta.textContent = (it.kind === 'img' ? 'صورة، ' : '') + pagesLabel(it.pages) + '، ' + fmtSize(it.file.size);
+    info.append(nm, meta);
+    const btns = document.createElement('span'); btns.className = 'm-btns';
+    const mk = (icon, label, cls, fn, dis) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'btn ' + cls;
+      b.setAttribute('aria-label', label); b.title = label; b.disabled = !!dis;
+      b.innerHTML = `<svg aria-hidden="true"><use href="#${icon}"/></svg>`;
+      b.addEventListener('click', fn); return b;
+    };
+    btns.append(
+      mk('i-upar', 'تقديم', '', () => moveItem(i, i - 1), i === 0 || MRG.busy),
+      mk('i-dnar', 'تأخير', '', () => moveItem(i, i + 1), i === n - 1 || MRG.busy),
+      mk('i-x', 'حذف', 'del', () => { MRG.items.splice(i, 1); renderMergeList(); }, MRG.busy)
+    );
+    li.append(grip, ord, th, info, btns);
+
+    // Drag to reorder (mouse)
+    li.draggable = !MRG.busy;
+    li.addEventListener('dragstart', e => { dragId = it.id; li.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', String(it.id)); } catch(_){} });
+    li.addEventListener('dragend', () => { dragId = null; list.querySelectorAll('.m-item').forEach(x => x.classList.remove('dragging','drop-before','drop-after')); });
+    li.addEventListener('dragover', e => {
+      if (dragId == null || dragId === it.id) return;
+      e.preventDefault();
+      const r = li.getBoundingClientRect(), after = e.clientY > r.top + r.height / 2;
+      li.classList.toggle('drop-after', after); li.classList.toggle('drop-before', !after);
+    });
+    li.addEventListener('dragleave', () => li.classList.remove('drop-before','drop-after'));
+    li.addEventListener('drop', e => {
+      if (dragId == null) return;
+      e.preventDefault(); e.stopPropagation();
+      const r = li.getBoundingClientRect(), after = e.clientY > r.top + r.height / 2;
+      const from = MRG.items.findIndex(x => x.id === dragId);
+      let to = MRG.items.findIndex(x => x.id === it.id) + (after ? 1 : 0);
+      if (from < to) to--;
+      dragId = null; moveItem(from, to);
+    });
+    list.appendChild(li);
+  });
+
+  const valid = MRG.items.filter(x => !x.error && x.pages != null);
+  const loading = MRG.items.some(x => !x.error && x.pages == null);
+  const total = valid.reduce((s, x) => s + x.pages, 0);
+  $('#m-empty').hidden = n > 0;
+  $('#m-clear').hidden = n === 0 || MRG.busy;
+  $('#m-order-hint').hidden = n < 2;
+  $('#m-merge').disabled = MRG.busy || loading || valid.length < 2;
+  if (!MRG.busy){
+    $('#m-status').textContent = loading ? 'جارٍ قراءة الملفات...'
+      : valid.length < 2 ? 'يلزم اختيار ملفين على الأقل.'
+      : `سيُنشأ ملف واحد من ${filesLabel(valid.length)}، مجموع صفحاته ${total}.`;
+  }
+}
+
+$('#m-clear').addEventListener('click', () => { if (MRG.busy) return; MRG.items = []; renderMergeList(); });
+
+function setMStatus(text, frac, hideBar){
+  $('#m-status').textContent = text;
+  $('#m-progress').hidden = !!hideBar;
+  $('#m-bar').style.width = Math.round((frac || 0) * 100) + '%';
+}
+
+$('#m-merge').addEventListener('click', async () => {
+  const items = MRG.items.filter(x => !x.error && x.bytes);
+  if (MRG.busy || items.length < 2) return;
+  MRG.busy = true; renderMergeList();
+  const { PDFDocument } = PDFLib;
+  const failed = [];
+  try {
+    const out = await PDFDocument.create();
+    for (let i = 0; i < items.length; i++){
+      const it = items[i];
+      setMStatus(`جارٍ دمج الملف ${i + 1} من ${items.length}...`, i / items.length);
+      try {
+        if (it.kind === 'pdf'){
+          const src = await PDFDocument.load(it.bytes, { ignoreEncryption:true });
+          const pages = await out.copyPages(src, src.getPageIndices());
+          pages.forEach(p => out.addPage(p));
+        } else {
+          const isPng = it.file.type === 'image/png' || /\.png$/i.test(it.name);
+          const img = isPng ? await out.embedPng(it.bytes) : await out.embedJpg(it.bytes);
+          // A4 page in the image's orientation, image fitted with a margin
+          const land = img.width > img.height;
+          const W = land ? 841.89 : 595.28, H = land ? 595.28 : 841.89, M = 24;
+          const s = Math.min((W - 2*M) / img.width, (H - 2*M) / img.height);
+          const w = img.width * s, h = img.height * s;
+          const page = out.addPage([W, H]);
+          page.drawImage(img, { x:(W - w) / 2, y:(H - h) / 2, width:w, height:h });
+        }
+      } catch(e){ failed.push(it.name); }
+    }
+    if (!out.getPageCount()) throw new Error('empty');
+    setMStatus('جارٍ إنشاء الملف...', 0.97);
+    const bytes = await out.save();
+    setMStatus('اكتمل الدمج.', 1);
+    let base = ($('#m-fname').value || '').trim().replace(/[\\/:*?"<>|]+/g, '').replace(/\.pdf$/i, '') || 'ملف مدمج';
+    await saveFile(base + '.pdf', new Blob([bytes], { type:'application/pdf' }));
+    if (failed.length) toast('تعذّر دمج: ' + failed.join('، '));
+    setTimeout(() => { if (!MRG.busy) setMStatus($('#m-status').textContent, 0, true); }, 1500);
+  } catch(err){
+    setMStatus('', 0, true);
+    toast('تعذّر دمج الملفات. قد يكون أحدها تالفًا أو كبيرًا جدًّا.');
+  } finally {
+    MRG.busy = false; renderMergeList();
+  }
+});
+renderMergeList();
 
 
 buildFontSelect(null);
