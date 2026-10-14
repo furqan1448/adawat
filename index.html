@@ -359,7 +359,7 @@ input[type=range]{width:100%; accent-color:var(--brand)}
     </a>
     <a class="tool-card" href="#ocr">
       <svg class="ic" aria-hidden="true"><use href="#i-ocr"/></svg>
-      <span class="txt"><strong>استخراج النص من الصورة</strong><small>تحويل الكلام المكتوب في الصورة إلى نص قابل للنسخ والتعديل، باللغتين العربية والإنجليزية</small></span>
+      <span class="txt"><strong>استخراج النص من الصورة</strong><small>تحويل النص المطبوع في الصورة إلى نص قابل للنسخ والتعديل، باللغتين العربية والإنجليزية</small></span>
       <svg class="go" aria-hidden="true"><use href="#i-next"/></svg>
     </a>
   </nav>
@@ -669,19 +669,7 @@ input[type=range]{width:100%; accent-color:var(--brand)}
         <input id="o-input" type="file" accept="image/*" multiple class="sr" tabindex="-1">
         <ul class="o-list" id="o-list" hidden></ul>
 
-        <fieldset class="modes">
-          <legend>طريقة القراءة</legend>
-          <label class="mode">
-            <input type="radio" name="o-engine" value="ai" checked>
-            <span><strong>قراءة متقدمة</strong><small>تقرأ الخط اليدوي وصور الجوال بدقة عالية، وتُرسل الصورة إلى خدمة Google لقراءتها.</small></span>
-          </label>
-          <label class="mode">
-            <input type="radio" name="o-engine" value="local">
-            <span><strong>قراءة سريعة داخل المتصفح</strong><small>للنص المطبوع الواضح فقط، ولا تخرج الصورة من الجهاز.</small></span>
-          </label>
-        </fieldset>
-
-        <div class="field">
+        <div class="field" style="margin-top:16px">
           <label for="o-lang">لغة النص في الصورة</label>
           <select id="o-lang">
             <option value="ara+eng" selected>العربية والإنجليزية</option>
@@ -2508,17 +2496,8 @@ $('#b-dl').addEventListener('click', () => {
    Tool 6: Image to text (OCR)
    ========================================================= */
 const OCR_LIB = 'https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/tesseract.min.js';
-/* رابط تطبيق الويب لخدمة القراءة المتقدمة (Google Apps Script) */
-const OCR_API = 'https://script.google.com/macros/s/AKfycbxioG3p4rRwMJS9REeK_S_GR-_lVrV0eCBjREGwm2bcN7EPQiJfUg5USSD7zLcXR0th/exec';
-const OCR = { items:[], seq:0, busy:false, worker:null, workerLang:'', libPromise:null, engine:'ai' };
-const OCR_NOTES = {
-  ai: 'تُراجَع النتيجة قبل اعتمادها، وتظهر عبارة [غير واضح] مكان الكلمات التي تعذّرت قراءتها.',
-  local: 'تكون النتيجة أدق كلما كانت الصورة واضحة ومستقيمة، ولا تناسب هذه الطريقة الخط اليدوي.'
-};
-document.querySelectorAll('input[name="o-engine"]').forEach(r => r.addEventListener('change', () => {
-  OCR.engine = r.value; $('#o-note').textContent = OCR_NOTES[OCR.engine];
-}));
-$('#o-note').textContent = OCR_NOTES.ai;
+const OCR = { items:[], seq:0, busy:false, worker:null, workerLang:'', libPromise:null };
+$('#o-note').textContent = 'تكون النتيجة أدق كلما كانت الصورة واضحة ومستقيمة، ولا تناسب هذه الطريقة الخط اليدوي.';
 const OCR_STATUS = {
   'loading tesseract core': 'جارٍ تجهيز أداة القراءة...',
   'initializing tesseract': 'جارٍ تجهيز أداة القراءة...',
@@ -2609,47 +2588,6 @@ async function getWorker(lang){
   return OCR.worker;
 }
 
-/* Advanced reading through the Apps Script service */
-async function imageForUpload(file){
-  const bmp = await createImageBitmap(file, { imageOrientation:'from-image' });
-  const k = Math.min(1, 2400 / Math.max(bmp.width, bmp.height));
-  const c = document.createElement('canvas');
-  c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
-  const cx = c.getContext('2d');
-  cx.fillStyle = '#ffffff'; cx.fillRect(0, 0, c.width, c.height);
-  cx.imageSmoothingQuality = 'high';
-  cx.drawImage(bmp, 0, 0, c.width, c.height);
-  return c.toDataURL('image/jpeg', 0.9).split(',')[1];
-}
-async function readWithService(file, lang, label){
-  const image = await imageForUpload(file);
-  const ctrl = new AbortController();
-  const t0 = Date.now();
-  const tick = setInterval(() => {
-    const sec = Math.round((Date.now() - t0) / 1000);
-    const t = sec === 1 ? 'ثانية واحدة' : sec === 2 ? 'ثانيتان' : sec <= 10 ? `${sec} ثوانٍ` : `${sec} ثانية`;
-    oStatus(`${label}، مضت ${t}...`);
-  }, 1000);
-  const timer = setTimeout(() => ctrl.abort(), 120000);
-  let res, data;
-  try {
-    res = await fetch(OCR_API, {
-      method:'POST',
-      headers:{ 'Content-Type':'text/plain;charset=utf-8' },
-      body: JSON.stringify({ image, mimeType:'image/jpeg', lang }),
-      signal: ctrl.signal
-    });
-    try { data = await res.json(); }
-    catch(e){ throw new Error('وصل رد غير متوقع من خدمة القراءة. يُرجى التحقق من نشر Apps Script بصلاحية «أي شخص».'); }
-  } catch(e){
-    if (e.name === 'AbortError') throw new Error('تأخر رد خدمة القراءة أكثر من دقيقتين. يُرجى المحاولة مرة أخرى بعد قليل.');
-    if (e.message && /^وصل/.test(e.message)) throw e;
-    throw new Error('تعذّر الاتصال بخدمة القراءة. يُرجى التحقق من الاتصال بالإنترنت.');
-  } finally { clearInterval(tick); clearTimeout(timer); }
-  if (!data.ok) throw new Error(data.error || 'تعذّرت قراءة الصورة.');
-  return data.text || '';
-}
-
 /* Upscale small images and flatten transparency to white: improves accuracy noticeably */
 async function prepImage(file){
   const bmp = await createImageBitmap(file, { imageOrientation:'from-image' });
@@ -2671,33 +2609,18 @@ function tidyText(t){
 $('#o-run').addEventListener('click', async () => {
   if (OCR.busy || !OCR.items.length) return;
   OCR.busy = true; $('#o-run').disabled = true; $('#o-pick').disabled = true;
-  const lang = $('#o-lang').value, n = OCR.items.length, useAI = OCR.engine === 'ai';
+  const lang = $('#o-lang').value, n = OCR.items.length;
   const parts = [];
-  if (useAI && !OCR_API){
-    oStatus('لم تُربط خدمة القراءة المتقدمة بعد. يُرجى وضع رابط Apps Script في OCR_API داخل الملف، أو اختيار القراءة السريعة.', true);
-    OCR.busy = false; $('#o-run').disabled = false; $('#o-pick').disabled = false;
-    return;
-  }
-  oProgress(useAI ? 0.05 : 0); oStatus('جارٍ تجهيز أداة القراءة...');
+  oProgress(0); oStatus('جارٍ تجهيز أداة القراءة...');
   try {
-    let worker = null;
-    if (!useAI){ await loadOcrLib(); worker = await getWorker(lang); }
+    await loadOcrLib();
+    const worker = await getWorker(lang);
     ocrStep = { i:0, n };
     for (let i = 0; i < n; i++){
       ocrStep.i = i;
-      let raw;
-      if (useAI){
-        const label = 'جارٍ قراءة النص من الصورة' + (n > 1 ? ` (${i + 1} من ${n})` : '');
-        oStatus(label + '، وقد يستغرق ذلك دقيقة...');
-        oProgress((i + 0.15) / n);
-        raw = await readWithService(OCR.items[i].file, lang, label);
-        oProgress((i + 1) / n);
-      } else {
-        const { data } = await worker.recognize(await prepImage(OCR.items[i].file));
-        raw = data.text || '';
-      }
-      const text = tidyText(raw);
-      parts.push(OCR.items.length > 1 ? `—— ${OCR.items[i].file.name} ——\n${text || '(لم يُعثر على نص)'}` : text);
+      const { data } = await worker.recognize(await prepImage(OCR.items[i].file));
+      const text = tidyText(data.text || '');
+      parts.push(n > 1 ? `—— ${OCR.items[i].file.name} ——\n${text || '(لم يُعثر على نص)'}` : text);
     }
     const out = parts.join('\n\n');
     $('#o-text').value = out;
@@ -2706,7 +2629,7 @@ $('#o-run').addEventListener('click', async () => {
     oStatus(out.trim() ? 'تم استخراج النص. يمكن مراجعته وتعديله قبل النسخ أو التنزيل.' : 'لم يُعثر على نص واضح في الصورة. يُرجى تجربة صورة أوضح أو تغيير اللغة.', !out.trim());
   } catch(e){
     console.error(e);
-    oStatus(useAI && e && e.message ? e.message : 'تعذّر استخراج النص. يُرجى التحقق من الاتصال بالإنترنت والمحاولة مرة أخرى.', true);
+    oStatus('تعذّر استخراج النص. يُرجى التحقق من الاتصال بالإنترنت والمحاولة مرة أخرى.', true);
   } finally {
     OCR.busy = false; $('#o-run').disabled = !OCR.items.length; $('#o-pick').disabled = false;
     setTimeout(() => oProgress(null), 600);
