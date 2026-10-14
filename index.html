@@ -244,6 +244,18 @@ main.wrap{padding-bottom:40px}
 #m-drop{min-height:190px}
 @media (max-width:560px){ .m-thumb{display:none} .m-item{gap:8px; padding:8px 10px} }
 
+/* Background removal tool */
+.checker{background:repeating-conic-gradient(var(--stage) 0 25%, var(--surface) 0 50%) 0 0/18px 18px}
+.b-stage{border-radius:10px; min-height:360px; display:grid; place-items:center; padding:16px; margin-bottom:12px; overflow:hidden}
+.b-stage canvas{max-width:100%; max-height:70vh; width:auto; height:auto; display:block}
+.b-stage canvas.pick{cursor:crosshair}
+.b-color-row{display:flex; gap:10px; align-items:center}
+.b-color-row input[type=color]{width:64px; flex:none}
+input[type=range]{width:100%; accent-color:var(--brand)}
+.range-head{display:flex; justify-content:space-between; align-items:baseline}
+.range-head output{color:var(--muted); font-size:.86rem}
+#b-bgcolor{margin-top:-4px}
+
 @media (max-width:900px){
   .qr-grid,.sign-grid{grid-template-columns:1fr}
   .stage{min-height:380px; padding:12px}
@@ -288,6 +300,7 @@ main.wrap{padding-bottom:40px}
     <symbol id="i-merge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3.5H5A1.5 1.5 0 0 0 3.5 5v9A1.5 1.5 0 0 0 5 15.5h4.5"/><path d="M14.5 8.5H19A1.5 1.5 0 0 1 20.5 10v9a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 8.5 19v-3.5"/><path d="M8 9.5h8m0 0l-2.5-2.5M16 9.5L13.5 12"/></symbol>
     <symbol id="i-upar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14.5l6-6 6 6"/></symbol>
     <symbol id="i-dnar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5l6 6 6-6"/></symbol>
+    <symbol id="i-bg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="2" stroke-dasharray="2.4 2.6"/><circle cx="12" cy="10" r="3"/><path d="M6.8 20.5c.9-3.1 2.9-4.8 5.2-4.8s4.3 1.7 5.2 4.8"/></symbol>
     <symbol id="i-grip" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></symbol>
   </defs>
 </svg>
@@ -321,6 +334,11 @@ main.wrap{padding-bottom:40px}
     <a class="tool-card" href="#merge">
       <svg class="ic" aria-hidden="true"><use href="#i-merge"/></svg>
       <span class="txt"><strong>دمج ملفات PDF في ملف واحد</strong><small>جمع عدة ملفات PDF أو صور في ملف واحد مع ترتيبها حسب الرغبة</small></span>
+      <svg class="go" aria-hidden="true"><use href="#i-next"/></svg>
+    </a>
+    <a class="tool-card" href="#bg">
+      <svg class="ic" aria-hidden="true"><use href="#i-bg"/></svg>
+      <span class="txt"><strong>إزالة الخلفية من الصورة</strong><small>إزالة خلفية الصورة تلقائيًا، أو إزالة لون محدد كالورق الأبيض خلف التوقيع والختم</small></span>
       <svg class="go" aria-hidden="true"><use href="#i-next"/></svg>
     </a>
   </nav>
@@ -544,6 +562,79 @@ main.wrap{padding-bottom:40px}
       </div>
     </div>
   </section>
+
+  <!-- Background removal -->
+  <section id="panel-bg" hidden>
+    <div class="qr-grid">
+      <div class="card">
+        <div class="drop small-drop" id="b-drop">
+          <svg aria-hidden="true"><use href="#i-bg"/></svg>
+          <div>اسحب الصورة وأفلتها هنا</div>
+          <button class="btn" id="b-pick" type="button">أو اختر صورة من الجهاز</button>
+        </div>
+        <input id="b-input" type="file" accept="image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp" class="sr" tabindex="-1">
+        <p class="filename" id="b-name" hidden></p>
+
+        <fieldset class="modes">
+          <legend>طريقة الإزالة</legend>
+          <label class="mode">
+            <input type="radio" name="b-mode" value="ai" checked>
+            <span><strong>إزالة تلقائية</strong><small>يُحدَّد الشخص أو العنصر الرئيس في الصورة وتُزال الخلفية من حوله، وتناسب الصور الشخصية وصور المنتجات.</small></span>
+          </label>
+          <label class="mode">
+            <input type="radio" name="b-mode" value="color">
+            <span><strong>إزالة لون الخلفية</strong><small>يُزال لون واحد من الصورة كلها، وتناسب التواقيع والأختام المصوّرة على ورق أبيض.</small></span>
+          </label>
+        </fieldset>
+
+        <div id="b-color-opts" hidden>
+          <div class="field">
+            <label for="b-key">لون الخلفية المراد إزالته</label>
+            <div class="b-color-row">
+              <input id="b-key" type="color" value="#ffffff">
+              <p class="hint" style="margin:0">يُحدَّد اللون تلقائيًا من أطراف الصورة، ويمكن تغييره بالنقر على أي موضع في الصورة الأصلية.</p>
+            </div>
+          </div>
+          <div class="field">
+            <div class="range-head"><label for="b-tol">درجة التقارب</label><output id="b-tol-out"></output></div>
+            <input id="b-tol" type="range" min="0" max="60" value="22">
+            <p class="hint">كلما زادت أُزيلت الألوان القريبة من لون الخلفية أيضًا، كالظلال الخفيفة على الورق.</p>
+          </div>
+          <div class="field">
+            <div class="range-head"><label for="b-soft">نعومة الحواف</label><output id="b-soft-out"></output></div>
+            <input id="b-soft" type="range" min="0" max="40" value="12">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>خلفية الصورة الناتجة</label>
+          <div class="seg" id="b-bgseg" role="group" aria-label="خلفية الصورة الناتجة">
+            <button type="button" data-bg="none" aria-pressed="true">شفافة</button>
+            <button type="button" data-bg="white" aria-pressed="false">بيضاء</button>
+            <button type="button" data-bg="custom" aria-pressed="false">لون آخر</button>
+          </div>
+          <input id="b-bgcolor" type="color" value="#740c1f" hidden aria-label="لون الخلفية الجديدة">
+        </div>
+
+        <button class="btn primary block" id="b-run" disabled><svg aria-hidden="true"><use href="#i-bg"/></svg>إزالة الخلفية</button>
+        <div class="progress" id="b-progress" hidden><div class="bar" id="b-bar"></div></div>
+        <p class="hint" id="b-status" aria-live="polite">تُعالَج الصورة داخل المتصفح، ولا تُرفع إلى أي خادم.</p>
+      </div>
+
+      <div class="card preview">
+        <div class="seg" id="b-viewseg" role="group" aria-label="طريقة العرض" hidden>
+          <button type="button" data-v="after" aria-pressed="true">بعد الإزالة</button>
+          <button type="button" data-v="before" aria-pressed="false">الصورة الأصلية</button>
+        </div>
+        <div class="b-stage checker" id="b-stage">
+          <canvas id="b-canvas" hidden aria-label="معاينة الصورة"></canvas>
+          <p class="empty" id="b-empty">تظهر هنا معاينة الصورة بعد اختيارها.</p>
+        </div>
+        <button class="btn primary block" id="b-dl" disabled><svg aria-hidden="true"><use href="#i-down"/></svg>تنزيل الصورة PNG</button>
+        <p class="hint" id="b-info"></p>
+      </div>
+    </div>
+  </section>
 </main>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -595,7 +686,8 @@ const VIEWS = {
   qr:   { panel:'panel-qr',   title:'تحويل الرابط إلى باركود' },
   sign: { panel:'panel-sign', title:'التوقيع والكتابة على ملف PDF' },
   word: { panel:'panel-word', title:'تحويل ملف PDF إلى Word' },
-  merge:{ panel:'panel-merge',title:'دمج ملفات PDF في ملف واحد' }
+  merge:{ panel:'panel-merge',title:'دمج ملفات PDF في ملف واحد' },
+  bg:   { panel:'panel-bg',   title:'إزالة الخلفية من الصورة' }
 };
 function route(){
   const v = VIEWS[location.hash.slice(1)] || null;
@@ -2120,6 +2212,224 @@ buildFontSelect(null);
 syncDefaultsToControls();
 loadSavedSigs();
 updateState();
+
+/* =========================================================
+   Tool 5: Remove image background
+   ========================================================= */
+const BGR_LIB = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.6.0/+esm';
+const BG = {
+  file:null, name:'', img:null, w:0, h:0,
+  srcData:null,      // ImageData of the original
+  result:null,       // canvas with transparent background
+  mode:'ai', view:'after', bg:'none', busy:false, lib:null
+};
+const bCanvas = $('#b-canvas');
+
+$('#b-pick').addEventListener('click', () => $('#b-input').click());
+$('#b-input').addEventListener('change', e => { const f = e.target.files[0]; e.target.value = ''; if (f) loadBgImage(f); });
+const bDrop = $('#b-drop');
+['dragenter','dragover'].forEach(t => bDrop.addEventListener(t, e => { if (!e.dataTransfer.types.includes('Files')) return; e.preventDefault(); bDrop.classList.add('over'); }));
+['dragleave','drop'].forEach(t => bDrop.addEventListener(t, e => { e.preventDefault(); bDrop.classList.remove('over'); }));
+bDrop.addEventListener('drop', e => { const f = (e.dataTransfer.files || [])[0]; if (f) loadBgImage(f); });
+
+function bStatus(msg, err){ const s = $('#b-status'); s.textContent = msg; s.classList.toggle('err', !!err); }
+function bProgress(p){
+  $('#b-progress').hidden = p == null;
+  if (p != null) $('#b-bar').style.width = Math.round(clamp(p, 0, 1) * 100) + '%';
+}
+
+async function loadBgImage(f){
+  if (BG.busy) return;
+  if (!/^image\//.test(f.type) && !/\.(png|jpe?g|webp)$/i.test(f.name)){ toast('يُرجى اختيار صورة بصيغة PNG أو JPG أو WEBP.'); return; }
+  let img;
+  try { img = await createImageBitmap(f, { imageOrientation:'from-image' }); }
+  catch(e){ toast('تعذّرت قراءة الصورة.'); return; }
+  BG.file = f; BG.name = f.name.replace(/\.[^.]+$/, '') || 'صورة';
+  BG.img = img; BG.w = img.width; BG.h = img.height;
+  const c = document.createElement('canvas'); c.width = BG.w; c.height = BG.h;
+  const cx = c.getContext('2d', { willReadFrequently:true }); cx.drawImage(img, 0, 0);
+  BG.srcData = cx.getImageData(0, 0, BG.w, BG.h);
+  BG.result = null;
+  $('#b-key').value = edgeColor(BG.srcData);
+  const n = $('#b-name'); n.hidden = false; n.textContent = f.name;
+  $('#b-info').textContent = `أبعاد الصورة: ${BG.w} × ${BG.h} بكسل`;
+  $('#b-run').disabled = false; $('#b-dl').disabled = true;
+  bStatus('اضغط زر «إزالة الخلفية» للبدء.');
+  bProgress(null);
+  setBgView('before');
+}
+
+/* The most common colour on the image border, used as the default key colour */
+function edgeColor(d){
+  const { width:w, height:h, data } = d, counts = new Map();
+  const step = Math.max(1, Math.floor((w + h) / 400));
+  const add = (x, y) => {
+    const i = (y * w + x) * 4;
+    if (data[i + 3] < 128) return;
+    const k = ((data[i] >> 4) << 8) | ((data[i + 1] >> 4) << 4) | (data[i + 2] >> 4);
+    const v = counts.get(k) || { n:0, r:0, g:0, b:0 };
+    v.n++; v.r += data[i]; v.g += data[i + 1]; v.b += data[i + 2]; counts.set(k, v);
+  };
+  for (let x = 0; x < w; x += step){ add(x, 0); add(x, h - 1); }
+  for (let y = 0; y < h; y += step){ add(0, y); add(w - 1, y); }
+  let best = null;
+  counts.forEach(v => { if (!best || v.n > best.n) best = v; });
+  if (!best) return '#ffffff';
+  const hx = v => Math.round(v / best.n).toString(16).padStart(2, '0');
+  return '#' + hx(best.r) + hx(best.g) + hx(best.b);
+}
+
+/* ---- Mode ---- */
+document.querySelectorAll('input[name="b-mode"]').forEach(r => r.addEventListener('change', () => {
+  BG.mode = r.value;
+  $('#b-color-opts').hidden = BG.mode !== 'color';
+  BG.result = null; $('#b-dl').disabled = true;
+  if (BG.img){ bStatus('اضغط زر «إزالة الخلفية» للبدء.'); setBgView('before'); }
+}));
+
+/* ---- Colour key mode ---- */
+function syncRangeLabels(){
+  $('#b-tol-out').textContent = $('#b-tol').value + '٪';
+  $('#b-soft-out').textContent = $('#b-soft').value + '٪';
+}
+syncRangeLabels();
+let colorRaf = 0;
+function scheduleColorKey(){
+  syncRangeLabels();
+  if (!BG.img || BG.mode !== 'color' || !BG.result) return;
+  cancelAnimationFrame(colorRaf);
+  colorRaf = requestAnimationFrame(() => { runColorKey(); });
+}
+['b-tol','b-soft','b-key'].forEach(id => $('#' + id).addEventListener('input', scheduleColorKey));
+
+function runColorKey(){
+  const hex = $('#b-key').value;
+  const kr = parseInt(hex.slice(1, 3), 16), kg = parseInt(hex.slice(3, 5), 16), kb = parseInt(hex.slice(5, 7), 16);
+  const MAXD = 441.673;
+  const tol = parseInt($('#b-tol').value, 10) / 100 * MAXD;
+  const soft = Math.max(1, parseInt($('#b-soft').value, 10) / 100 * MAXD);
+  const src = BG.srcData.data, out = new ImageData(BG.w, BG.h), o = out.data;
+  for (let i = 0; i < src.length; i += 4){
+    const dr = src[i] - kr, dg = src[i + 1] - kg, db = src[i + 2] - kb;
+    const d = Math.sqrt(dr * dr + dg * dg + db * db);
+    let a = d <= tol ? 0 : d >= tol + soft ? 1 : (d - tol) / soft;
+    o[i] = src[i]; o[i + 1] = src[i + 1]; o[i + 2] = src[i + 2];
+    o[i + 3] = Math.round(src[i + 3] * a);
+  }
+  const c = document.createElement('canvas'); c.width = BG.w; c.height = BG.h;
+  c.getContext('2d').putImageData(out, 0, 0);
+  BG.result = c;
+  $('#b-dl').disabled = false;
+  setBgView('after');
+}
+
+/* Click on the original image to pick the key colour */
+bCanvas.addEventListener('click', e => {
+  if (!BG.img || BG.mode !== 'color' || BG.view !== 'before') return;
+  const r = bCanvas.getBoundingClientRect();
+  const x = clamp(Math.floor((e.clientX - r.left) / r.width * BG.w), 0, BG.w - 1);
+  const y = clamp(Math.floor((e.clientY - r.top) / r.height * BG.h), 0, BG.h - 1);
+  const i = (y * BG.w + x) * 4, d = BG.srcData.data;
+  $('#b-key').value = '#' + [d[i], d[i + 1], d[i + 2]].map(v => v.toString(16).padStart(2, '0')).join('');
+  toast('تم تحديد لون الخلفية من الصورة.');
+  if (BG.result) runColorKey();
+});
+
+/* ---- Automatic (AI) mode ---- */
+async function runAI(){
+  BG.busy = true; $('#b-run').disabled = true;
+  bProgress(0);
+  bStatus('جارٍ تجهيز أداة الإزالة...');
+  try {
+    if (!BG.lib) BG.lib = await import(BGR_LIB);
+    let fetchSeen = false;
+    const blob = await BG.lib.removeBackground(BG.file, {
+      model: 'isnet_fp16',
+      output: { format:'image/png' },
+      progress: (key, cur, total) => {
+        if (key.startsWith('fetch:')){
+          if (!fetchSeen){ fetchSeen = true; bStatus('جارٍ تنزيل نموذج الإزالة، ويحدث ذلك في المرة الأولى فقط...'); }
+          if (total) bProgress(cur / total * 0.8);
+        } else if (key.startsWith('compute:')){
+          bStatus('جارٍ تحليل الصورة وإزالة الخلفية...');
+          bProgress(0.8 + (total ? cur / total : 0) * 0.2);
+        }
+      }
+    });
+    const bmp = await createImageBitmap(blob);
+    const c = document.createElement('canvas'); c.width = BG.w; c.height = BG.h;
+    c.getContext('2d').drawImage(bmp, 0, 0, BG.w, BG.h);
+    BG.result = c;
+    bProgress(1);
+    bStatus('تمت إزالة الخلفية بنجاح.');
+    $('#b-dl').disabled = false;
+    setBgView('after');
+  } catch(e){
+    console.error(e);
+    bStatus('تعذّرت الإزالة التلقائية. يُرجى التحقق من الاتصال بالإنترنت والمحاولة مرة أخرى، أو استخدام طريقة «إزالة لون الخلفية».', true);
+  } finally {
+    BG.busy = false; $('#b-run').disabled = !BG.img;
+    setTimeout(() => bProgress(null), 600);
+  }
+}
+
+$('#b-run').addEventListener('click', () => {
+  if (!BG.img || BG.busy) return;
+  if (BG.mode === 'color'){
+    runColorKey();
+    bStatus('تمت إزالة اللون. يمكن ضبط درجة التقارب ونعومة الحواف وستتحدث المعاينة مباشرة.');
+  } else runAI();
+});
+
+/* ---- Output background ---- */
+$('#b-bgseg').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  BG.bg = b.dataset.bg;
+  $('#b-bgseg').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  $('#b-bgcolor').hidden = BG.bg !== 'custom';
+  drawBgPreview();
+});
+$('#b-bgcolor').addEventListener('input', drawBgPreview);
+function bgFill(){ return BG.bg === 'white' ? '#ffffff' : BG.bg === 'custom' ? $('#b-bgcolor').value : null; }
+
+/* ---- Preview ---- */
+$('#b-viewseg').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (b) setBgView(b.dataset.v);
+});
+function setBgView(v){
+  BG.view = (v === 'after' && !BG.result) ? 'before' : v;
+  $('#b-viewseg').hidden = !BG.result;
+  $('#b-viewseg').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.v === BG.view)));
+  drawBgPreview();
+}
+function composeResult(){
+  const c = document.createElement('canvas'); c.width = BG.w; c.height = BG.h;
+  const cx = c.getContext('2d'), fill = bgFill();
+  if (fill){ cx.fillStyle = fill; cx.fillRect(0, 0, BG.w, BG.h); }
+  cx.drawImage(BG.result, 0, 0);
+  return c;
+}
+function drawBgPreview(){
+  const has = !!BG.img;
+  bCanvas.hidden = !has; $('#b-empty').hidden = has;
+  if (!has) return;
+  bCanvas.width = BG.w; bCanvas.height = BG.h;
+  const cx = bCanvas.getContext('2d');
+  cx.clearRect(0, 0, BG.w, BG.h);
+  if (BG.view === 'after' && BG.result) cx.drawImage(composeResult(), 0, 0);
+  else cx.drawImage(BG.img, 0, 0);
+  bCanvas.classList.toggle('pick', BG.mode === 'color' && BG.view === 'before');
+}
+
+/* ---- Download ---- */
+$('#b-dl').addEventListener('click', () => {
+  if (!BG.result) return;
+  composeResult().toBlob(blob => {
+    if (blob) saveFile(BG.name + ' - بدون خلفية.png', blob);
+    else toast('تعذّر إنشاء الصورة.');
+  }, 'image/png');
+});
+
 })();
 </script>
 </body>
