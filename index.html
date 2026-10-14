@@ -2509,7 +2509,7 @@ $('#b-dl').addEventListener('click', () => {
    ========================================================= */
 const OCR_LIB = 'https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/tesseract.min.js';
 /* رابط تطبيق الويب لخدمة القراءة المتقدمة (Google Apps Script) */
-const OCR_API = 'https://script.google.com/macros/s/AKfycbzwaFsnj49NU16-OwSR6P5zmCkL7gxkOE29SYfdxpwhBUkyf-nH26B5mSooGxCfp8gv/exec';
+const OCR_API = 'https://script.google.com/macros/s/AKfycbxioG3p4rRwMJS9REeK_S_GR-_lVrV0eCBjREGwm2bcN7EPQiJfUg5USSD7zLcXR0th/exec';
 const OCR = { items:[], seq:0, busy:false, worker:null, workerLang:'', libPromise:null, engine:'ai' };
 const OCR_NOTES = {
   ai: 'تُراجَع النتيجة قبل اعتمادها، وتظهر عبارة [غير واضح] مكان الكلمات التي تعذّرت قراءتها.',
@@ -2621,18 +2621,31 @@ async function imageForUpload(file){
   cx.drawImage(bmp, 0, 0, c.width, c.height);
   return c.toDataURL('image/jpeg', 0.9).split(',')[1];
 }
-async function readWithService(file, lang){
+async function readWithService(file, lang, label){
   const image = await imageForUpload(file);
-  let res;
+  const ctrl = new AbortController();
+  const t0 = Date.now();
+  const tick = setInterval(() => {
+    const sec = Math.round((Date.now() - t0) / 1000);
+    const t = sec === 1 ? 'ثانية واحدة' : sec === 2 ? 'ثانيتان' : sec <= 10 ? `${sec} ثوانٍ` : `${sec} ثانية`;
+    oStatus(`${label}، مضت ${t}...`);
+  }, 1000);
+  const timer = setTimeout(() => ctrl.abort(), 120000);
+  let res, data;
   try {
     res = await fetch(OCR_API, {
       method:'POST',
       headers:{ 'Content-Type':'text/plain;charset=utf-8' },
-      body: JSON.stringify({ image, mimeType:'image/jpeg', lang })
+      body: JSON.stringify({ image, mimeType:'image/jpeg', lang }),
+      signal: ctrl.signal
     });
-  } catch(e){ throw new Error('تعذّر الاتصال بخدمة القراءة. يُرجى التحقق من الاتصال بالإنترنت.'); }
-  let data;
-  try { data = await res.json(); } catch(e){ throw new Error('وصل رد غير متوقع من خدمة القراءة. يُرجى التحقق من نشر Apps Script بصلاحية «أي شخص».'); }
+    try { data = await res.json(); }
+    catch(e){ throw new Error('وصل رد غير متوقع من خدمة القراءة. يُرجى التحقق من نشر Apps Script بصلاحية «أي شخص».'); }
+  } catch(e){
+    if (e.name === 'AbortError') throw new Error('تأخر رد خدمة القراءة أكثر من دقيقتين. يُرجى المحاولة مرة أخرى بعد قليل.');
+    if (e.message && /^وصل/.test(e.message)) throw e;
+    throw new Error('تعذّر الاتصال بخدمة القراءة. يُرجى التحقق من الاتصال بالإنترنت.');
+  } finally { clearInterval(tick); clearTimeout(timer); }
   if (!data.ok) throw new Error(data.error || 'تعذّرت قراءة الصورة.');
   return data.text || '';
 }
@@ -2674,9 +2687,10 @@ $('#o-run').addEventListener('click', async () => {
       ocrStep.i = i;
       let raw;
       if (useAI){
-        oStatus('جارٍ قراءة النص من الصورة' + (n > 1 ? ` (${i + 1} من ${n})` : '') + '، وقد يستغرق ذلك بضع ثوانٍ...');
+        const label = 'جارٍ قراءة النص من الصورة' + (n > 1 ? ` (${i + 1} من ${n})` : '');
+        oStatus(label + '، وقد يستغرق ذلك دقيقة...');
         oProgress((i + 0.15) / n);
-        raw = await readWithService(OCR.items[i].file, lang);
+        raw = await readWithService(OCR.items[i].file, lang, label);
         oProgress((i + 1) / n);
       } else {
         const { data } = await worker.recognize(await prepImage(OCR.items[i].file));
