@@ -256,6 +256,21 @@ input[type=range]{width:100%; accent-color:var(--brand)}
 .range-head output{color:var(--muted); font-size:.86rem}
 #b-bgcolor{margin-top:-4px}
 
+/* OCR tool */
+.o-list{list-style:none; margin:12px 0 0; padding:0; display:flex; flex-direction:column; gap:8px}
+.o-item{display:flex; align-items:center; gap:10px; padding:6px 10px 6px 6px; border:1px solid var(--line); border-radius:10px}
+.o-item img{flex:none; width:52px; height:52px; object-fit:cover; border-radius:6px; background:var(--stage)}
+.o-name{flex:1; min-width:0; font-size:.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.o-del{flex:none; width:32px; height:32px; padding:0; color:var(--danger)}
+.o-del svg{width:12px; height:12px}
+.o-text{
+  width:100%; min-height:380px; resize:vertical; font:inherit; font-size:1rem; line-height:1.9; color:var(--ink);
+  background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:14px; unicode-bidi:plaintext; margin-bottom:12px
+}
+.o-head{display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:8px}
+.o-head label{margin:0}
+.o-head small{color:var(--muted); font-size:.85rem}
+
 @media (max-width:900px){
   .qr-grid,.sign-grid{grid-template-columns:1fr}
   .stage{min-height:380px; padding:12px}
@@ -301,6 +316,7 @@ input[type=range]{width:100%; accent-color:var(--brand)}
     <symbol id="i-upar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14.5l6-6 6 6"/></symbol>
     <symbol id="i-dnar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5l6 6 6-6"/></symbol>
     <symbol id="i-bg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="2" stroke-dasharray="2.4 2.6"/><circle cx="12" cy="10" r="3"/><path d="M6.8 20.5c.9-3.1 2.9-4.8 5.2-4.8s4.3 1.7 5.2 4.8"/></symbol>
+    <symbol id="i-ocr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8V5.5a2 2 0 0 1 2-2H8M16 3.5h2.5a2 2 0 0 1 2 2V8M20.5 16v2.5a2 2 0 0 1-2 2H16M8 20.5H5.5a2 2 0 0 1-2-2V16"/><path d="M8 9h8M8 12h8M8 15h5"/></symbol>
     <symbol id="i-grip" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></symbol>
   </defs>
 </svg>
@@ -339,6 +355,11 @@ input[type=range]{width:100%; accent-color:var(--brand)}
     <a class="tool-card" href="#bg">
       <svg class="ic" aria-hidden="true"><use href="#i-bg"/></svg>
       <span class="txt"><strong>إزالة الخلفية من الصورة</strong><small>إزالة خلفية الصورة تلقائيًا، أو إزالة لون محدد كالورق الأبيض خلف التوقيع والختم</small></span>
+      <svg class="go" aria-hidden="true"><use href="#i-next"/></svg>
+    </a>
+    <a class="tool-card" href="#ocr">
+      <svg class="ic" aria-hidden="true"><use href="#i-ocr"/></svg>
+      <span class="txt"><strong>استخراج النص من الصورة</strong><small>تحويل الكلام المكتوب في الصورة إلى نص قابل للنسخ والتعديل، باللغتين العربية والإنجليزية</small></span>
       <svg class="go" aria-hidden="true"><use href="#i-next"/></svg>
     </a>
   </nav>
@@ -635,6 +656,46 @@ input[type=range]{width:100%; accent-color:var(--brand)}
       </div>
     </div>
   </section>
+
+  <!-- Image to text (OCR) -->
+  <section id="panel-ocr" hidden>
+    <div class="qr-grid">
+      <div class="card">
+        <div class="drop small-drop" id="o-drop">
+          <svg aria-hidden="true"><use href="#i-ocr"/></svg>
+          <div>اسحب الصورة وأفلتها هنا</div>
+          <button class="btn" id="o-pick" type="button">أو اختر صورًا من الجهاز</button>
+        </div>
+        <input id="o-input" type="file" accept="image/*" multiple class="sr" tabindex="-1">
+        <ul class="o-list" id="o-list" hidden></ul>
+
+        <div class="field" style="margin-top:18px">
+          <label for="o-lang">لغة النص في الصورة</label>
+          <select id="o-lang">
+            <option value="ara+eng" selected>العربية والإنجليزية</option>
+            <option value="ara">العربية فقط</option>
+            <option value="eng">الإنجليزية فقط</option>
+          </select>
+          <p class="hint">تحديد لغة واحدة يرفع دقة القراءة إذا كان النص كله بتلك اللغة.</p>
+        </div>
+
+        <button class="btn primary block" id="o-run" disabled><svg aria-hidden="true"><use href="#i-ocr"/></svg>استخراج النص</button>
+        <div class="progress" id="o-progress" hidden><div class="bar" id="o-bar"></div></div>
+        <p class="hint" id="o-status" aria-live="polite">يمكن أيضًا لصق صورة من الحافظة بالضغط على Ctrl + V.</p>
+        <p class="hint">تكون النتيجة أدق كلما كانت الصورة واضحة ومستقيمة والخط مطبوعًا، أما الخط اليدوي فقد لا يُقرأ بدقة.</p>
+      </div>
+
+      <div class="card">
+        <div class="o-head"><label for="o-text">النص المستخرج</label><small id="o-count"></small></div>
+        <textarea class="o-text" id="o-text" dir="auto" placeholder="يظهر هنا النص المستخرج من الصورة، ويمكن تعديله قبل نسخه أو تنزيله."></textarea>
+        <div class="actions">
+          <button class="btn primary" id="o-copy" type="button" disabled><svg aria-hidden="true"><use href="#i-copy"/></svg>نسخ النص</button>
+          <button class="btn" id="o-txt" type="button" disabled><svg aria-hidden="true"><use href="#i-down"/></svg>تنزيل ملف نصي</button>
+          <button class="btn ghost" id="o-clear" type="button" disabled><svg aria-hidden="true"><use href="#i-erase"/></svg>مسح النص</button>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -687,7 +748,8 @@ const VIEWS = {
   sign: { panel:'panel-sign', title:'التوقيع والكتابة على ملف PDF' },
   word: { panel:'panel-word', title:'تحويل ملف PDF إلى Word' },
   merge:{ panel:'panel-merge',title:'دمج ملفات PDF في ملف واحد' },
-  bg:   { panel:'panel-bg',   title:'إزالة الخلفية من الصورة' }
+  bg:   { panel:'panel-bg',   title:'إزالة الخلفية من الصورة' },
+  ocr:  { panel:'panel-ocr',  title:'استخراج النص من الصورة' }
 };
 function route(){
   const v = VIEWS[location.hash.slice(1)] || null;
@@ -2429,6 +2491,172 @@ $('#b-dl').addEventListener('click', () => {
     else toast('تعذّر إنشاء الصورة.');
   }, 'image/png');
 });
+
+
+/* =========================================================
+   Tool 6: Image to text (OCR)
+   ========================================================= */
+const OCR_LIB = 'https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/tesseract.min.js';
+const OCR = { items:[], seq:0, busy:false, worker:null, workerLang:'', libPromise:null };
+const OCR_STATUS = {
+  'loading tesseract core': 'جارٍ تجهيز أداة القراءة...',
+  'initializing tesseract': 'جارٍ تجهيز أداة القراءة...',
+  'loading language traineddata': 'جارٍ تنزيل بيانات اللغة، ويحدث ذلك في المرة الأولى فقط...',
+  'initializing api': 'جارٍ تجهيز أداة القراءة...',
+  'recognizing text': 'جارٍ قراءة النص من الصورة'
+};
+const isImage = f => /^image\//.test(f.type) || /\.(png|jpe?g|webp|bmp|gif)$/i.test(f.name);
+
+$('#o-pick').addEventListener('click', () => $('#o-input').click());
+$('#o-input').addEventListener('change', e => { const fs = [...e.target.files]; e.target.value = ''; addOcrFiles(fs); });
+const oDrop = $('#o-drop');
+['dragenter','dragover'].forEach(t => oDrop.addEventListener(t, e => { if (!e.dataTransfer.types.includes('Files')) return; e.preventDefault(); oDrop.classList.add('over'); }));
+['dragleave','drop'].forEach(t => oDrop.addEventListener(t, e => { e.preventDefault(); oDrop.classList.remove('over'); }));
+oDrop.addEventListener('drop', e => addOcrFiles([...(e.dataTransfer.files || [])]));
+/* Paste an image (e.g. a screenshot) while the tool is open */
+document.addEventListener('paste', e => {
+  if ($('#panel-ocr').hidden) return;
+  const fs = [...(e.clipboardData && e.clipboardData.files || [])].filter(isImage);
+  if (!fs.length) return;
+  e.preventDefault();
+  addOcrFiles(fs.map((f, i) => new File([f], f.name && f.name !== 'image.png' ? f.name : `صورة ملصقة ${OCR.seq + i + 1}.png`, { type:f.type })));
+});
+
+function oStatus(msg, err){ const s = $('#o-status'); s.textContent = msg; s.classList.toggle('err', !!err); }
+function oProgress(p){
+  $('#o-progress').hidden = p == null;
+  if (p != null) $('#o-bar').style.width = Math.round(clamp(p, 0, 1) * 100) + '%';
+}
+
+function addOcrFiles(files){
+  if (OCR.busy) return;
+  const ok = files.filter(isImage);
+  if (files.length && ok.length < files.length) toast('تُقبل الصور فقط، وتم تجاهل غيرها.');
+  ok.forEach(f => OCR.items.push({ id: ++OCR.seq, file:f, url: URL.createObjectURL(f) }));
+  renderOcrList();
+}
+function renderOcrList(){
+  const list = $('#o-list'); list.innerHTML = '';
+  OCR.items.forEach((it, i) => {
+    const li = document.createElement('li'); li.className = 'o-item';
+    const img = document.createElement('img'); img.src = it.url; img.alt = '';
+    const name = document.createElement('span'); name.className = 'o-name'; name.textContent = it.file.name;
+    const del = document.createElement('button'); del.type = 'button'; del.className = 'btn ghost o-del';
+    del.setAttribute('aria-label', 'حذف ' + it.file.name);
+    del.innerHTML = '<svg aria-hidden="true"><use href="#i-x"/></svg>';
+    del.addEventListener('click', () => {
+      if (OCR.busy) return;
+      URL.revokeObjectURL(it.url); OCR.items.splice(i, 1); renderOcrList();
+    });
+    li.append(img, name, del); list.append(li);
+  });
+  list.hidden = !OCR.items.length;
+  $('#o-run').disabled = !OCR.items.length || OCR.busy;
+  if (!OCR.busy) oStatus(OCR.items.length ? 'اضغط زر «استخراج النص» للبدء.' : 'يمكن أيضًا لصق صورة من الحافظة بالضغط على Ctrl + V.');
+}
+
+function loadOcrLib(){
+  if (window.Tesseract) return Promise.resolve();
+  if (!OCR.libPromise){
+    OCR.libPromise = new Promise((res, rej) => {
+      const s = document.createElement('script'); s.src = OCR_LIB; s.async = true;
+      s.onload = res; s.onerror = () => { OCR.libPromise = null; s.remove(); rej(new Error('lib')); };
+      document.head.appendChild(s);
+    });
+  }
+  return OCR.libPromise;
+}
+
+let ocrStep = { i:0, n:1 };
+function ocrLogger(m){
+  const label = OCR_STATUS[m.status];
+  if (!label) return;
+  if (m.status === 'recognizing text'){
+    const part = ocrStep.n > 1 ? ` (${ocrStep.i + 1} من ${ocrStep.n})` : '';
+    oStatus(label + part + '...');
+    oProgress((ocrStep.i + (m.progress || 0)) / ocrStep.n);
+  } else {
+    oStatus(label);
+    if (m.status === 'loading language traineddata' && typeof m.progress === 'number') oProgress(m.progress * 0.95);
+  }
+}
+async function getWorker(lang){
+  if (OCR.worker && OCR.workerLang === lang) return OCR.worker;
+  if (OCR.worker){ try { await OCR.worker.terminate(); } catch(e){} OCR.worker = null; }
+  OCR.worker = await Tesseract.createWorker(lang.split('+'), 1, { logger: ocrLogger });
+  OCR.workerLang = lang;
+  return OCR.worker;
+}
+
+/* Upscale small images and flatten transparency to white: improves accuracy noticeably */
+async function prepImage(file){
+  const bmp = await createImageBitmap(file, { imageOrientation:'from-image' });
+  const long = Math.max(bmp.width, bmp.height);
+  const k = long < 1600 ? Math.min(3, 1600 / long) : long > 5000 ? 5000 / long : 1;
+  const c = document.createElement('canvas');
+  c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+  const cx = c.getContext('2d');
+  cx.fillStyle = '#ffffff'; cx.fillRect(0, 0, c.width, c.height);
+  cx.imageSmoothingQuality = 'high';
+  cx.drawImage(bmp, 0, 0, c.width, c.height);
+  return c;
+}
+
+function tidyText(t){
+  return t.replace(/[\u200e\u200f]/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+}
+
+$('#o-run').addEventListener('click', async () => {
+  if (OCR.busy || !OCR.items.length) return;
+  OCR.busy = true; $('#o-run').disabled = true; $('#o-pick').disabled = true;
+  oProgress(0); oStatus('جارٍ تجهيز أداة القراءة...');
+  const lang = $('#o-lang').value;
+  const parts = [];
+  try {
+    await loadOcrLib();
+    const worker = await getWorker(lang);
+    ocrStep = { i:0, n:OCR.items.length };
+    for (let i = 0; i < OCR.items.length; i++){
+      ocrStep.i = i;
+      const img = await prepImage(OCR.items[i].file);
+      const { data } = await worker.recognize(img);
+      const text = tidyText(data.text || '');
+      parts.push(OCR.items.length > 1 ? `—— ${OCR.items[i].file.name} ——\n${text || '(لم يُعثر على نص)'}` : text);
+    }
+    const out = parts.join('\n\n');
+    $('#o-text').value = out;
+    syncOcrOut();
+    oProgress(1);
+    oStatus(out.trim() ? 'تم استخراج النص. يمكن مراجعته وتعديله قبل النسخ أو التنزيل.' : 'لم يُعثر على نص واضح في الصورة. يُرجى تجربة صورة أوضح أو تغيير اللغة.', !out.trim());
+  } catch(e){
+    console.error(e);
+    oStatus('تعذّر استخراج النص. يُرجى التحقق من الاتصال بالإنترنت والمحاولة مرة أخرى.', true);
+  } finally {
+    OCR.busy = false; $('#o-run').disabled = !OCR.items.length; $('#o-pick').disabled = false;
+    setTimeout(() => oProgress(null), 600);
+  }
+});
+
+/* ---- Output ---- */
+const oText = $('#o-text');
+function syncOcrOut(){
+  const v = oText.value;
+  $('#o-copy').disabled = $('#o-txt').disabled = $('#o-clear').disabled = !v.trim();
+  const words = v.trim() ? v.trim().split(/\s+/).length : 0;
+  $('#o-count').textContent = words ? `عدد الكلمات: ${words}` : '';
+}
+oText.addEventListener('input', syncOcrOut);
+syncOcrOut();
+
+$('#o-copy').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(oText.value); toast('تم نسخ النص.'); }
+  catch(e){ oText.select(); document.execCommand('copy'); toast('تم نسخ النص.'); }
+});
+$('#o-txt').addEventListener('click', () => {
+  const base = OCR.items.length === 1 ? OCR.items[0].file.name.replace(/\.[^.]+$/, '') : 'النص المستخرج';
+  saveFile(base + '.txt', new Blob(['﻿' + oText.value.replace(/\n/g, '\r\n')], { type:'text/plain;charset=utf-8' }));
+});
+$('#o-clear').addEventListener('click', () => { oText.value = ''; syncOcrOut(); });
 
 })();
 </script>
